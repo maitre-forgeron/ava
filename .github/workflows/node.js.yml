@@ -67,7 +67,8 @@ jobs:
       run: ls -al /home/runner/work/ava/ava
 
     - name: Extract Artifacts
-      run: unzip /home/runner/work/ava/ava/release.zip
+      run: unzip -o /home/runner/work/ava/ava/release.zip
+      working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
