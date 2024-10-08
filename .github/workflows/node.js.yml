@@ -16,14 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-
-    - name: Navigate to Angular app directory
-      run: cd Ava.Api/ClientApp/ava.web
 
     - name: Install dependencies
       run: |
