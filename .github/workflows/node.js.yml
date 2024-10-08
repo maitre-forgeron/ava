@@ -49,7 +49,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: release-artifacts
-        path: release.zip
+        path: Ava.Api/ClientApp/ava.web/release.zip
 
   deploy:
     needs: build
