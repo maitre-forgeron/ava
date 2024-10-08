@@ -33,6 +33,9 @@ jobs:
         fi
       working-directory: Ava.Api/ClientApp/ava.web
 
+    - name: Zip Artifacts
+      run: zip release.zip ./* -r
+
     - name: Build Angular app
       run: npm run build --if-present
       working-directory: Ava.Api/ClientApp/ava.web
@@ -53,6 +56,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Download Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-artifacts
+
+    - name: Unzip Artifacts
+      run: unzip release.zip -d Ava.Api/ClientApp/ava.web/
+    
     - name: Publish Angular build
       run: |
         npm install
