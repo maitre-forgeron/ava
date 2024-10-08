@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: './server/package-lock.json'
+        cache-dependency-path: 'Ava.Api/ClientApp/ava.web/package-lock.json'
 
     - name: Install dependencies
       run: |
