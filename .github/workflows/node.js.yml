@@ -33,12 +33,19 @@ jobs:
         fi
       working-directory: Ava.Api/ClientApp/ava.web
 
-    - name: Zip Artifacts
-      run: zip release.zip ./* -r
-
     - name: Build Angular app
       run: npm run build --if-present
       working-directory: Ava.Api/ClientApp/ava.web
+
+    - name: Zip Artifacts
+      run: zip -r release.zip ./* 
+      working-directory: Ava.Api/ClientApp/ava.web
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts
+        path: Ava.Api/ClientApp/ava.web/release.zip
 
     - name: Run tests
       run: npm test -- --browsers=ChromeHeadless --watch=false
