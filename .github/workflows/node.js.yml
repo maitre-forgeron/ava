@@ -37,19 +37,19 @@ jobs:
       run: npm run build --if-present
       working-directory: Ava.Api/ClientApp/ava.web
 
-    - name: Zip Artifacts
-      run: zip -r release.zip ./* 
-      working-directory: Ava.Api/ClientApp/ava.web
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: release-artifacts
-        path: Ava.Api/ClientApp/ava.web/release.zip
-
     - name: Run tests
       run: npm test -- --browsers=ChromeHeadless --watch=false
       working-directory: Ava.Api/ClientApp/ava.web
+
+    - name: Zip Artifacts
+      run: zip -r release.zip ./*
+      working-directory: Ava.Api/ClientApp/ava.web
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts
+        path: release.zip
 
   deploy:
     needs: build
@@ -58,19 +58,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-artifacts
+
+    - name: Extract Artifacts
+      run: unzip release.zip
+      working-directory: Ava.Api/ClientApp/ava.web
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Download Artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: release-artifacts
-
-    - name: Unzip Artifacts
-      run: unzip release.zip -d Ava.Api/ClientApp/ava.web/
-    
     - name: Publish Angular build
       run: |
         npm install
