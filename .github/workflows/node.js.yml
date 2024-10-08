@@ -60,7 +60,7 @@ jobs:
       working-directory: Ava.Api/ClientApp/ava.web
       
     - name: Copy web.config to dist folder
-      run: cp ./Ava.Api/ClientApp/ava.web/web.config ./Ava.Api/ClientApp/ava.web/dist/ava.web/browser/
+      run: cp ./Ava.Api/ClientApp/ava.web/src/web.config ./Ava.Api/ClientApp/ava.web/dist/ava.web/browser/
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
