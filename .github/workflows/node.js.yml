@@ -38,5 +38,5 @@ jobs:
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Run tests
-      run: npm test -- --browsers=ChromeHeadless
+      run: npm test -- --browsers=ChromeHeadless --watch=false
       working-directory: Ava.Api/ClientApp/ava.web
