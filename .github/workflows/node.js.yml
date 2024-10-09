@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
 
     steps:
     - uses: actions/checkout@v4
@@ -23,64 +23,66 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: 'Ava.Api/ClientApp/ava.web/package-lock.json'
-
-    - name: Install dependencies
+    
+    - name: Clean npm cache and install
       run: |
-        if [ -f package-lock.json ]; then
-          npm ci
-        else
-          npm install
-        fi
-      working-directory: Ava.Api/ClientApp/ava.web
-
-    - name: Build Angular app
-      run: npm run build --if-present
-      working-directory: Ava.Api/ClientApp/ava.web
-
-    - name: Run tests
-      run: npm test -- --browsers=ChromeHeadless --watch=false
+        npm cache clean --force
+        npm ci
+        npm install --save-dev @angular/cli
       working-directory: Ava.Api/ClientApp/ava.web
     
-    - name: Zip Artifacts
-      run: zip -r release.zip ./ -x "node_modules/*" "dist/*"
+    - name: Build Angular app
+      run: npx ng build --configuration production
       working-directory: Ava.Api/ClientApp/ava.web
 
+    - name: Zip Artifacts
+      run: zip release.zip ./* -r
+      working-directory: Ava.Api/ClientApp/ava.web
+
+    - name: Debug File Path and Size
+      run: |
+        echo "Uploading file(s) from: Ava.Api/ClientApp/ava.web/"
+        ls -lh Ava.Api/ClientApp/ava.web/
+    
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: release-artifacts
-        path: Ava.Api/ClientApp/ava.web/release.zip
+        path: Ava.Api/ClientApp/ava.web/release.zip*
+        retention-days: 5
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
+  
     steps:
     - uses: actions/checkout@v4
-
+  
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3
       with:
         name: release-artifacts
-
-    - name: List directory contents after downloading artifact
-      run: ls -al /home/runner/work/ava/ava
-
+  
+    - name: Debug Artifact Download
+      run: |
+        echo "Checking downloaded files in $(pwd)"
+        ls -lh
+  
+    - name: Create target directory if it does not exist
+      run: |
+        mkdir -p Ava.Api/ClientApp/ava.web
+  
     - name: Extract Artifacts
-      run: unzip -o /home/runner/work/ava/ava/release.zip
-      working-directory: Ava.Api/ClientApp/ava.web
-
+      run: |
+        echo "Unzipping to $(pwd)/Ava.Api/ClientApp/ava.web"
+        unzip -o /home/runner/work/ava/ava/release.zip -d Ava.Api/ClientApp/ava.web
+      working-directory: /home/runner/work/ava/ava
+  
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-
-    - name: Publish Angular build
-      run: |
-        npm install
-        npm run build --prod
-      working-directory: Ava.Api/ClientApp/ava.web
-
+  
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
