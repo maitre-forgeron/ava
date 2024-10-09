@@ -54,29 +54,29 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
+  
     steps:
     - uses: actions/checkout@v4
-
+  
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3
       with:
         name: release-artifacts
-
+  
     - name: Debug Artifact Download
       run: |
         echo "Checking downloaded files in $(pwd)"
         ls -lh
-
+  
     - name: Extract Artifacts
-      run: unzip -o release.zip
+      run: unzip -o /home/runner/work/ava/ava/release.zip -d Ava.Api/ClientApp/ava.web
       working-directory: Ava.Api/ClientApp/ava.web
-
+  
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-
+  
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
