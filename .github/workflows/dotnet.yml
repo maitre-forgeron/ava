@@ -45,6 +45,16 @@ jobs:
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'pc-ava'
+        app-name: ${{ secrets.AZURE_API_APP_SERVICE_NAME }}
         publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
         package: ./publish
+
+    - name: Install Azure CLI
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+    - name: Set Azure Web App Startup Command
+      run: |
+        az webapp config set --resource-group ${{ secrets.AZURE_AVA_RESOURCE_GROUP_NAME }} --name ${{ secrets.AZURE_API_APP_SERVICE_NAME }} --startup-file "dotnet ${{ secrets.AZURE_API_EXE_PATH }}"
+      env:
+        AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
