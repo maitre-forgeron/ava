@@ -36,14 +36,15 @@ jobs:
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Zip Artifacts
-      run: zip -r release.zip .
+      run: |
+        zip -r -s 50m release.zip .
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: release-artifacts
-        path: Ava.Api/ClientApp/ava.web/release.zip
+        name: release-artifacts-part
+        path: Ava.Api/ClientApp/ava.web/release.zip*
         retention-days: 5
 
   deploy:
