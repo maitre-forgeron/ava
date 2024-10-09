@@ -32,7 +32,7 @@ jobs:
       working-directory: Ava.Api/ClientApp/ava.web
     
     - name: Build Angular app
-      run: ng build --prod
+      run: npx ng build --prod
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Zip Artifacts
