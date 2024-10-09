@@ -40,6 +40,16 @@ jobs:
     - name: Run tests
       run: npm test -- --browsers=ChromeHeadless --watch=false
       working-directory: Ava.Api/ClientApp/ava.web
+    
+    - name: Zip Artifacts
+      run: zip -r release.zip ./ -x "node_modules/*" "dist/*"
+      working-directory: Ava.Api/ClientApp/ava.web
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts
+        path: Ava.Api/ClientApp/ava.web/release.zip
 
   deploy:
     needs: build
@@ -47,6 +57,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-artifacts
+
+    - name: List directory contents after downloading artifact
+      run: ls -al /home/runner/work/ava/ava
+
+    - name: Extract Artifacts
+      run: unzip -o /home/runner/work/ava/ava/release.zip
+      working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
