@@ -93,12 +93,18 @@ jobs:
     - name: Check contents of wwwroot
       run: |
         echo "Listing contents of /home/site/wwwroot"
-        ls -l /home/site/wwwroot
-
+        ls -l /home/site/wwwroot || echo "wwwroot not found"
+    
     - name: Debug index.html location
       run: |
         echo "Checking for index.html file in the wwwroot directory"
-        find /home/site/wwwroot -name "index.html"
+        find /home/site/wwwroot -name "index.html" || echo "index.html not found"
         echo "Listing directory structure of /home/site/wwwroot"
-        ls -R /home/site/wwwroot
+        ls -R /home/site/wwwroot || echo "No directory structure found"
+    
+    - name: Use Locate to Find index.html and Show Directory
+      run: |
+        echo "Using locate to search for index.html"
+        locate index.html || echo "index.html not found with locate"
+
 
