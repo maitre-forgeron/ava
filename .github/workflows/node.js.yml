@@ -73,8 +73,10 @@ jobs:
         mkdir -p Ava.Api/ClientApp/ava.web
   
     - name: Extract Artifacts
-      run: unzip -o /home/runner/work/ava/ava/release.zip -d Ava.Api/ClientApp/ava.web
-      working-directory: Ava.Api/ClientApp/ava.web
+      run: |
+        echo "Unzipping to $(pwd)/Ava.Api/ClientApp/ava.web"
+        unzip -o /home/runner/work/ava/ava/release.zip -d Ava.Api/ClientApp/ava.web
+      working-directory: /home/runner/work/ava/ava
   
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
@@ -87,4 +89,3 @@ jobs:
         app-name: 'pc-ava-web'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: './Ava.Api/ClientApp/ava.web/dist/ava.web'
-
