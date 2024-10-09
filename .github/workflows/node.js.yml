@@ -42,7 +42,7 @@ jobs:
       working-directory: Ava.Api/ClientApp/ava.web
     
     - name: Zip Artifacts
-      run: zip -r release.zip ./ -x "node_modules/*" "dist/*"
+      run: zip -r release.zip ./
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Upload Build Artifacts
