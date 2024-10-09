@@ -68,6 +68,10 @@ jobs:
         echo "Checking downloaded files in $(pwd)"
         ls -lh
   
+    - name: Create target directory if it does not exist
+      run: |
+        mkdir -p Ava.Api/ClientApp/ava.web
+  
     - name: Extract Artifacts
       run: unzip -o /home/runner/work/ava/ava/release.zip -d Ava.Api/ClientApp/ava.web
       working-directory: Ava.Api/ClientApp/ava.web
@@ -83,3 +87,4 @@ jobs:
         app-name: 'pc-ava-web'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: './Ava.Api/ClientApp/ava.web/dist/ava.web'
+
