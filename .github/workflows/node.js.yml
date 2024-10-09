@@ -29,8 +29,15 @@ jobs:
         npm cache clean --force
         npm ci
         npm install --save-dev @angular/cli
+        npm install cookie@latest --save
+        npm install karma@latest --save-dev
+        npm install engine.io@latest --save
+        npm install socket.io@latest --save
+        npm install @angular-devkit/build-angular@latest --save-dev
+        npm install karma-jasmine@latest --save-dev
+        npm install karma-jasmine-html-reporter@latest --save-dev
         npm fund
-        npm audit fix
+        npm audit fix --force
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Build Angular app
