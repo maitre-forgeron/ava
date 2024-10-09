@@ -63,6 +63,11 @@ jobs:
       with:
         name: release-artifacts
 
+    - name: Debug Artifact Download
+      run: |
+        echo "Checking downloaded files in $(pwd)"
+        ls -lh
+
     - name: Extract Artifacts
       run: unzip -o release.zip
       working-directory: Ava.Api/ClientApp/ava.web
