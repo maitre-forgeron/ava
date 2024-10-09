@@ -59,19 +59,13 @@ jobs:
         name: release-artifacts
 
     - name: Extract Artifacts
-      run: unzip -o /home/runner/work/ava/ava/release.zip
+      run: unzip -o release.zip
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-
-    - name: Publish Angular build
-      run: |
-        npm install
-        npm run build --prod
-      working-directory: Ava.Api/ClientApp/ava.web
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
