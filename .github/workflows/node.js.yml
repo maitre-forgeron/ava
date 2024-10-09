@@ -25,7 +25,7 @@ jobs:
         cache-dependency-path: 'Ava.Api/ClientApp/ava.web/package-lock.json'
 
     - name: Build Angular app
-      run: npx ng build
+      run: ng build
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Zip Artifacts
