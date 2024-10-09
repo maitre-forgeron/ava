@@ -90,12 +90,26 @@ jobs:
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: './Ava.Api/ClientApp/ava.web/dist/ava.web'
 
+    - name: Install Node.js
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nodejs
+        sudo apt-get install -y npm
+    
+    - name: Verify Node.js installation
+      run: |
+        node -v
+        npm -v
+    
     - name: Install PM2 globally
       run: |
         npm install pm2 -g
     
-    - name: Serve Angular App using PM2
+    - name: Start Angular App with PM2
       run: |
-        pm2 serve /home/site/wwwroot/dist/ava.web/browser --no-daemon --spa
+        pm2 start /home/site/wwwroot/dist/ava.web/browser --name "angular-app" --no-daemon --env NODE_ENV=production
+    
+    - name: View PM2 logs
+      run: pm2 logs
 
 
