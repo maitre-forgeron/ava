@@ -40,6 +40,11 @@ jobs:
         zip -r -s 50m release.zip .
       working-directory: Ava.Api/ClientApp/ava.web
 
+    - name: Debug File Path and Size
+      run: |
+        echo "Uploading file(s) from: Ava.Api/ClientApp/ava.web/"
+        ls -lh Ava.Api/ClientApp/ava.web/
+    
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3
       with:
