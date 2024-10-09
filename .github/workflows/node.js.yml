@@ -89,3 +89,8 @@ jobs:
         app-name: 'pc-ava-web'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: './Ava.Api/ClientApp/ava.web/dist/ava.web'
+
+    - name: Serve Angular App using PM2
+      run: |
+        pm2 serve /home/site/wwwroot/dist/ava.web/browser --no-daemon --spa
+
