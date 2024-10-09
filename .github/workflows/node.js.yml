@@ -26,12 +26,13 @@ jobs:
     
     - name: Clean npm cache and install
       run: |
+        npm cache clean --force
         npm ci
         npm install --save-dev @angular/cli
       working-directory: Ava.Api/ClientApp/ava.web
-
+    
     - name: Build Angular app
-      run: ng build
+      run: ng build --prod
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Zip Artifacts
