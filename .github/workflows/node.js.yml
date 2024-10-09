@@ -89,3 +89,16 @@ jobs:
         app-name: 'pc-ava-web'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: './Ava.Api/ClientApp/ava.web/dist/ava.web'
+
+    - name: Check contents of wwwroot
+      run: |
+        echo "Listing contents of /home/site/wwwroot"
+        ls -l /home/site/wwwroot
+
+    - name: Debug index.html location
+      run: |
+        echo "Checking for index.html file in the wwwroot directory"
+        find /home/site/wwwroot -name "index.html"
+        echo "Listing directory structure of /home/site/wwwroot"
+        ls -R /home/site/wwwroot
+
