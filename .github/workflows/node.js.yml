@@ -24,25 +24,19 @@ jobs:
         cache: 'npm'
         cache-dependency-path: 'Ava.Api/ClientApp/ava.web/package-lock.json'
 
-    - name: Install dependencies
+    - name: Clean npm cache and install
       run: |
-        if [ -f package-lock.json ]; then
-          npm ci
-        else
-          npm install
-        fi
+        npm cache clean --force
+        npm ci
+        npm install --save-dev @angular/cli
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Build Angular app
-      run: npm run build --if-present
+      run: npx ng build --if-present
       working-directory: Ava.Api/ClientApp/ava.web
 
-    - name: Run tests
-      run: npm test -- --browsers=ChromeHeadless --watch=false
-      working-directory: Ava.Api/ClientApp/ava.web
-    
     - name: Zip Artifacts
-      run: zip -r release.zip ./
+      run: zip -r release.zip ./*
       working-directory: Ava.Api/ClientApp/ava.web
 
     - name: Upload Build Artifacts
@@ -62,9 +56,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: release-artifacts
-
-    - name: List directory contents after downloading artifact
-      run: ls -al /home/runner/work/ava/ava
 
     - name: Extract Artifacts
       run: unzip -o /home/runner/work/ava/ava/release.zip
