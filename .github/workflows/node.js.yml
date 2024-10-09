@@ -90,21 +90,22 @@ jobs:
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: './Ava.Api/ClientApp/ava.web/dist/ava.web'
 
-    - name: Check contents of wwwroot
+    - name: Check if wwwroot exists and its contents
       run: |
-        echo "Listing contents of /home/site/wwwroot"
-        ls -l /home/site/wwwroot || echo "wwwroot not found"
+        echo "Checking if wwwroot exists at /home/site/wwwroot"
+        if [ -d "/home/site/wwwroot" ]; then
+          echo "wwwroot exists, listing contents:"
+          ls -l /home/site/wwwroot
+        else
+          echo "wwwroot not found."
+        fi
     
-    - name: Debug index.html location
+    - name: Check for index.html in all directories
       run: |
-        echo "Checking for index.html file in the wwwroot directory"
-        find /home/site/wwwroot -name "index.html" || echo "index.html not found"
-        echo "Listing directory structure of /home/site/wwwroot"
-        ls -R /home/site/wwwroot || echo "No directory structure found"
+        echo "Checking for index.html file in the directory structure"
+        find / -name "index.html" || echo "index.html not found"
     
-    - name: Use Locate to Find index.html and Show Directory
+    - name: Debug deploy structure
       run: |
-        echo "Using locate to search for index.html"
-        locate index.html || echo "index.html not found with locate"
-
-
+        echo "Listing the directory structure of the deployed app directory"
+        ls -R ./Ava.Api/ClientApp/ava.web/dist/ava.web || echo "No directory structure found in the deployment package"
