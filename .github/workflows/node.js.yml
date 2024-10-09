@@ -88,24 +88,4 @@ jobs:
       with:
         app-name: 'pc-ava-web'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './Ava.Api/ClientApp/ava.web/dist/ava.web'
-
-    - name: Check if wwwroot exists and its contents
-      run: |
-        echo "Checking if wwwroot exists at /home/site/wwwroot"
-        if [ -d "/home/site/wwwroot" ]; then
-          echo "wwwroot exists, listing contents:"
-          ls -l /home/site/wwwroot
-        else
-          echo "wwwroot not found."
-        fi
-    
-    - name: Check for index.html in all directories
-      run: |
-        echo "Checking for index.html file in the directory structure"
-        find / -name "index.html" || echo "index.html not found"
-    
-    - name: Debug deploy structure
-      run: |
-        echo "Listing the directory structure of the deployed app directory"
-        ls -R ./Ava.Api/ClientApp/ava.web/dist/ava.web || echo "No directory structure found in the deployment package"
+        package: './Ava.Api/ClientApp/ava.web/dist/ava.web/browser'
