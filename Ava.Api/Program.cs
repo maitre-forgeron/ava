@@ -18,6 +18,8 @@ public class Program
 
         builder.Services.AddInfrastructureServices(builder.Configuration);
 
+        builder.Services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/ava.web/dist"; });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -27,12 +29,23 @@ public class Program
             app.UseSwaggerUI();
         }
 
+
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
 
         app.MapControllers();
+
+        app.UseSpa(spa =>
+        {
+            spa.Options.SourcePath = "ClientApp/ava.web";
+
+            if (app.Environment.IsDevelopment())
+            {
+                spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+            }
+        });
 
         app.Run();
     }
