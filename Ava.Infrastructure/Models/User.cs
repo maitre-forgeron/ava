@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-
-namespace Ava.Infrastructure.Models
+﻿namespace Ava.Infrastructure.Models
 {
-    public class User : IdentityUser
+    public class User
     {
     }
 }
