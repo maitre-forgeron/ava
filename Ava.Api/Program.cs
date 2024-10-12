@@ -1,6 +1,8 @@
 
 using Ava.Infrastructure;
 using Ava.Application;
+using System.Reflection;
+using Ava.Infrastructure.Services.PictureService;
 
 namespace Ava.Api;
 
@@ -19,6 +21,10 @@ public class Program
 
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddApplicationServices();
+
+        builder.Configuration.AddEnvironmentVariables()
+    .AddUserSecrets(Assembly.GetAssembly(typeof(PictureService))!, true);
+
 
         var app = builder.Build();
 
