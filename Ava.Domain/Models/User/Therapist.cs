@@ -14,6 +14,5 @@
         public UserProfile UserProfile { get; init; }
 
         public List<UserReview> Reviews { get; set; }
-        public List<UserSpecialty> Specialties { get; set; }
     }
 }
