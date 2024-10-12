@@ -7,13 +7,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ava.Api", "Ava.Api\Ava.Api.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ava.Tests.Unit", "Ava.Tests.Unit\Ava.Tests.Unit.csproj", "{9E38FBB6-D89C-40C3-AD21-A33208EEDF1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Domain", "Ava.Domain\Ava.Domain.csproj", "{A97F962D-1159-4340-B0BC-3541F6DD9412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ava.Domain", "Ava.Domain\Ava.Domain.csproj", "{A97F962D-1159-4340-B0BC-3541F6DD9412}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Infrastructure", "Ava.Infrastructure\Ava.Infrastructure.csproj", "{530FB4F7-AF40-4B0D-8C14-645AA268FCB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ava.Infrastructure", "Ava.Infrastructure\Ava.Infrastructure.csproj", "{530FB4F7-AF40-4B0D-8C14-645AA268FCB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Application", "Ava.Application\Ava.Application.csproj", "{A2BB743B-F85F-4F8C-8E88-4B27F49E2B6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ava.Application", "Ava.Application\Ava.Application.csproj", "{A2BB743B-F85F-4F8C-8E88-4B27F49E2B6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Shared", "Ava.Shared\Ava.Shared.csproj", "{22F5324A-F12B-4E37-9603-88E6F13D788C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ava.Shared", "Ava.Shared\Ava.Shared.csproj", "{22F5324A-F12B-4E37-9603-88E6F13D788C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FD0FE27-6A1E-45CD-A21B-D32B955623B7}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.override.yml = docker-compose.override.yml
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
