@@ -1,5 +1,6 @@
 
 using Ava.Infrastructure;
+using Ava.Application;
 
 namespace Ava.Api;
 
@@ -17,6 +18,7 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddInfrastructureServices(builder.Configuration);
+        builder.Services.AddApplicationServices();
 
         var app = builder.Build();
 
