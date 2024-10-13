@@ -1,10 +1,4 @@
 services:
-  ava.api:
-    image: ${DOCKER_REGISTRY-}avaapi
-    build:
-      context: .
-      dockerfile: Ava.Api/Dockerfile
-
   avadb:
     image: mcr.microsoft.com/mssql/server:2022-latest
 
