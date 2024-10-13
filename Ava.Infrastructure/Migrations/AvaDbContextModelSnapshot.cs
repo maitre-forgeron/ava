@@ -395,13 +395,13 @@ namespace Ava.Infrastructure.Migrations
                     b.HasOne("Ava.Domain.Models.User.UserProfile", "Recipient")
                         .WithMany("RecipientReviews")
                         .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Ava.Domain.Models.User.UserProfile", "Sender")
                         .WithMany("SenderReviews")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Ava.Domain.Models.User.Therapist", null)

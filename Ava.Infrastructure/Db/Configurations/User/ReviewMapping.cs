@@ -15,11 +15,13 @@ namespace Ava.Infrastructure.Db.Configurations.User
 
             builder.HasOne(x => x.Sender)
                 .WithMany(x => x.SenderReviews)
-                .HasForeignKey(x => x.SenderId);
+                .HasForeignKey(x => x.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Recipient)
                 .WithMany(x => x.RecipientReviews)
-                .HasForeignKey(x => x.RecipientId);
+                .HasForeignKey(x => x.RecipientId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
