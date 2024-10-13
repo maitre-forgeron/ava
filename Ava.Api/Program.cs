@@ -1,8 +1,11 @@
 
-using Ava.Infrastructure;
 using Ava.Application;
-using System.Reflection;
+using Ava.Infrastructure;
+using Ava.Infrastructure.Db;
+using Ava.Infrastructure.Models;
 using Ava.Infrastructure.Services.PictureService;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection;
 
 namespace Ava.Api;
 
@@ -22,8 +25,12 @@ public class Program
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddApplicationServices();
 
+        builder.Services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<AvaDbContext>()
+            .AddDefaultTokenProviders();
+
         builder.Configuration.AddEnvironmentVariables()
-    .AddUserSecrets(Assembly.GetAssembly(typeof(PictureService))!, true);
+            .AddUserSecrets(Assembly.GetAssembly(typeof(PictureService))!, true);
 
 
         var app = builder.Build();

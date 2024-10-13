@@ -1,8 +1,8 @@
 ﻿namespace Ava.Domain.Models.User
 {
-    public class Customer : UserProfile
+    public class Customer : Entity
     {
-        public Customer(string firstName, string lastName, string personalId) : base(firstName, lastName, personalId)
+        public Customer()
         {
         }
 

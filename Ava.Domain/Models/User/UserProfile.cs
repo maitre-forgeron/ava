@@ -9,6 +9,9 @@
             PersonalId = personalId;
         }
 
+        /// <summary>
+        /// UserId
+        /// </summary>
         public string SubjectId { get; init; }
         public string UserName { get; set; }
         public string Email { get; set; }
@@ -22,5 +25,8 @@
         {
             Photo = photo;
         }
+
+        public List<Review> SenderReviews { get; set; }
+        public List<Review> RecipientReviews { get; set; }
     }
 }

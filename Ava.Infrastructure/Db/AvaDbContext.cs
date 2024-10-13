@@ -1,9 +1,11 @@
-﻿namespace Ava.Infrastructure.Db;
+﻿using Ava.Domain.Models.User;
+using Ava.Infrastructure.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class AvaDbContext : DbContext
+namespace Ava.Infrastructure.Db;
+
+public class AvaDbContext : IdentityDbContext
 {
-    //TODO DbSets here
-
     public AvaDbContext(DbContextOptions<AvaDbContext> options) : base(options)
     {
 
@@ -15,4 +17,10 @@ public class AvaDbContext : DbContext
 
         base.OnModelCreating(builder);
     }
+
+    public DbSet<User> Users { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<Therapist> Therapists { get; set; }
+    public DbSet<UserProfile> UserProfiles { get; set; }
 }

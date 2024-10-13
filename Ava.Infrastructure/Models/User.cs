@@ -1,6 +1,8 @@
-﻿namespace Ava.Infrastructure.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Ava.Infrastructure.Models
 {
-    public class User
+    public class User : IdentityUser
     {
     }
 }

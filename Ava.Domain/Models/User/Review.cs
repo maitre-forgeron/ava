@@ -2,12 +2,18 @@
 {
     public class Review : Entity
     {
+        /// <summary>
+        /// UserProfileId
+        /// </summary>
         public Guid SenderId { get; init; }
+        /// <summary>
+        /// UserProfileId
+        /// </summary>
         public Guid RecipientId { get; init; }
         public int ReviewValue { get; set; }
         public string ReviewText { get; set; }
 
-        public UserProfile Sender { get; init; }
-        public UserProfile Recipient { get; init; }
+        public UserProfile Sender { get; set; }
+        public UserProfile Recipient { get; set; }
     }
 }
