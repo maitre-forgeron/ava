@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ava.Infrastructure.Migrations
 {
     [DbContext(typeof(AvaDbContext))]
-    [Migration("20241017200142_initial")]
-    partial class initial
+    [Migration("20241017210200_AddedCategoryMigration")]
+    partial class AddedCategoryMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

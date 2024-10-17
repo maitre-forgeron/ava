@@ -19,9 +19,6 @@ public class Program
         builder.Services.AddLoggingServices();
         builder.Host.UseSerilog(SerilogConfigurator.Configure);
 
-        builder.Services.AddHttpClient("Ava.Web")
-        .AddHttpMessageHandler<LoggingDelegatingHandler>();
-
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -41,13 +38,13 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+        }
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var initialiser = scope.ServiceProvider.GetRequiredService<AvaDbContextInitialiser>();
-                await initialiser.InitialiseAsync();
-                await initialiser.SeedAsync();
-            }
+        using (var scope = app.Services.CreateScope())
+        {
+            var initialiser = scope.ServiceProvider.GetRequiredService<AvaDbContextInitialiser>();
+            await initialiser.InitialiseAsync();
+            await initialiser.SeedAsync();
         }
 
         app.UseHttpsRedirection();
