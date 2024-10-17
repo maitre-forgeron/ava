@@ -19,5 +19,4 @@ public class AvaDbContextFactory : IDesignTimeDbContextFactory<AvaDbContext>
 
         return new AvaDbContext(optionsBuilder.Options);
     }
-
 }

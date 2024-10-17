@@ -6,7 +6,6 @@ public class AvaDbContext : DbContext
 {
     //TODO DbSets here
     public DbSet<Category> Categories { get; set; }
-    public DbSet<SubCategory> SubCategories { get; set; }
 
     public AvaDbContext(DbContextOptions<AvaDbContext> options) : base(options)
     {
