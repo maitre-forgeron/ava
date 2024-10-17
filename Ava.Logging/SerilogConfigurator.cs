@@ -26,6 +26,7 @@ namespace Ava.Logging
             configuration
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
+                .Enrich.WithProperty("UTC Timestamp", DateTime.UtcNow)
                 .WriteTo.Debug()
                 .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
                 .WriteTo.MSSqlServer(
