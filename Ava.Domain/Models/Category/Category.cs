@@ -6,9 +6,9 @@
 
         public string Name { get; set; }
 
-        private List<Category> _subCategories;
+        private List<Category> _subCategories = new List<Category>();
 
-        public IReadOnlyCollection<Category> SubCategories => _subCategories ??= [];
+        public IReadOnlyCollection<Category> SubCategories => _subCategories.AsReadOnly();
 
         public void AddSubCategory(Category subCategory)
         {
@@ -17,8 +17,6 @@
 
             if (_subCategories.Contains(subCategory))
                 throw new InvalidOperationException("This subcategory is already added.");
-
-            _subCategories ??= [];
 
             _subCategories.Add(subCategory);
         }

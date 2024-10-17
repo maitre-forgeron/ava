@@ -20,6 +20,18 @@ public static class Configuration
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<IPictureService, PictureService>();
 
+        SeedDatabase(services.BuildServiceProvider());
+
         return services;
+    }
+
+    private static void SeedDatabase(IServiceProvider serviceProvider)
+    {
+        using (var scope = serviceProvider.CreateScope())
+        {
+            var initializer = scope.ServiceProvider.GetRequiredService<AvaDbContextInitialiser>();
+            initializer.InitialiseAsync().GetAwaiter().GetResult();
+            initializer.SeedAsync().GetAwaiter().GetResult();
+        }
     }
 }
