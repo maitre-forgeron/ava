@@ -23,15 +23,20 @@ namespace Ava.Logging
                 AutoCreateSqlTable = true 
             };
 
+            var columnOptions = new ColumnOptions
+            {
+                TimeStamp = { ConvertToUtc = true }
+            };
+
             configuration
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
-                .Enrich.WithProperty("UTC Timestamp", DateTime.UtcNow)
                 .WriteTo.Debug()
                 .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
                 .WriteTo.MSSqlServer(
                     connectionString: connectionString,
-                    sinkOptions: sinkOptions)
+                    sinkOptions: sinkOptions,
+                    columnOptions: columnOptions)
                 .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
                 .Enrich.WithProperty("Application", context.HostingEnvironment.ApplicationName)
                 .ReadFrom.Configuration(context.Configuration);
