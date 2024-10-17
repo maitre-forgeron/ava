@@ -47,7 +47,7 @@ public class AvaDbContextInitialiser
         if (!_context.Categories.Any())
         {
             var categories = CreateCategories();
-            await _context.Categories.AddRangeAsync(categories);
+            _context.Categories.AddRange(categories);
             await _context.SaveChangesAsync();
         }
     }
