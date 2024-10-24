@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ava.Infrastructure.Migrations
 {
     [DbContext(typeof(AvaDbContext))]
-    [Migration("20241013165451_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20241024183228_UserCategoryAndIdentityEntities")]
+    partial class UserCategoryAndIdentityEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,26 @@ namespace Ava.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Categories");
+                });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Customer", b =>
                 {
@@ -382,6 +402,13 @@ namespace Ava.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
+            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
+                {
+                    b.HasOne("Ava.Domain.Models.Category.Category", null)
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId");
+                });
+
             modelBuilder.Entity("Ava.Domain.Models.User.Customer", b =>
                 {
                     b.HasOne("Ava.Domain.Models.User.UserProfile", "UserProfile")
@@ -476,6 +503,11 @@ namespace Ava.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
+                {
+                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Therapist", b =>

@@ -1,6 +1,10 @@
 ﻿using Ava.Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Ava.Api.Controllers
 {
@@ -10,11 +14,13 @@ namespace Ava.Api.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager)
+        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration configuration)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [HttpPost(nameof(Login))]
@@ -31,7 +37,13 @@ namespace Ava.Api.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                var token = GenerateToken(await GetClaims(user));
+
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo
+                });
             }
             else
             {
@@ -57,6 +69,40 @@ namespace Ava.Api.Controllers
             }
 
             return BadRequest();
+        }
+
+        private JwtSecurityToken GenerateToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JwtSettings:Issuer"],
+                audience: _configuration["JwtSettings:Audience"],
+                expires: DateTime.Now.AddMinutes(double.Parse(_configuration["JwtSettings:ExpiresInMinutes"])),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
+        }
+
+        private async Task<List<Claim>> GetClaims(User user)
+        {
+            //await _userManager.GetClaimsAsync(user);
+
+            var authClaims = new List<Claim>
+            {
+                new Claim("Username", user.UserName),
+            };
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                authClaims.Add(new Claim("Role", role));
+            }
+
+            return authClaims;
         }
     }
 }

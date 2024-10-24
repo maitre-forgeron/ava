@@ -22,6 +22,26 @@ namespace Ava.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("Ava.Domain.Models.User.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -118,7 +138,6 @@ namespace Ava.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.UserProfile", b =>
-            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +167,6 @@ namespace Ava.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("Photo")
-                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SubjectId")
@@ -381,6 +399,13 @@ namespace Ava.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
+            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
+                {
+                    b.HasOne("Ava.Domain.Models.Category.Category", null)
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId");
+                });
+
             modelBuilder.Entity("Ava.Domain.Models.User.Customer", b =>
                 {
                     b.HasOne("Ava.Domain.Models.User.UserProfile", "UserProfile")
@@ -467,7 +492,6 @@ namespace Ava.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
-                    b.HasIndex("CategoryId");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
@@ -476,22 +500,20 @@ namespace Ava.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
+                {
+                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Therapist", b =>
-            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
                 {
                     b.Navigation("Reviews");
-                    b.HasOne("Ava.Domain.Models.Category.Category", null)
-                        .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId");
                 });
 
-            modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
             modelBuilder.Entity("Ava.Domain.Models.User.UserProfile", b =>
                 {
-                    b.Navigation("SubCategories");
                     b.Navigation("RecipientReviews");
 
                     b.Navigation("SenderReviews");
