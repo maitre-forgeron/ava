@@ -1,8 +1,8 @@
 ﻿namespace Ava.Domain.Models.User
 {
-    public class Therapist : UserProfile
+    public class Therapist : Entity
     {
-        public Therapist(string firstName, string lastName, string personalId) : base(firstName, lastName, personalId)
+        public Therapist()
         {
         }
 
@@ -13,6 +13,6 @@
 
         public UserProfile UserProfile { get; init; }
 
-        public List<UserReview> Reviews { get; set; }
+        public List<Review> Reviews { get; set; }
     }
 }

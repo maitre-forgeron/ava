@@ -6,6 +6,7 @@ public static class Configuration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        var x = configuration.GetConnectionString("AvaConnectionString");
         services.AddDbContext<AvaDbContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("AvaConnectionString"), builder =>
