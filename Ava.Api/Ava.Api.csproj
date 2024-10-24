@@ -14,6 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -21,6 +22,7 @@
     <ProjectReference Include="..\Ava.Application\Ava.Application.csproj" />
     <ProjectReference Include="..\Ava.Domain\Ava.Domain.csproj" />
     <ProjectReference Include="..\Ava.Infrastructure\Ava.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ava.Logging\Ava.Logging.csproj" />
     <ProjectReference Include="..\Ava.Shared\Ava.Shared.csproj" />
     <ProjectReference Include="..\Ava.Tests.Unit\Ava.Tests.Unit.csproj" />
   </ItemGroup>

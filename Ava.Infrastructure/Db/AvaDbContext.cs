@@ -2,10 +2,15 @@
 using Ava.Infrastructure.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
+using Ava.Domain.Models.Category;
+
 namespace Ava.Infrastructure.Db;
 
 public class AvaDbContext : IdentityDbContext
 {
+    //TODO DbSets here
+    public DbSet<Category> Categories { get; set; }
+
     public AvaDbContext(DbContextOptions<AvaDbContext> options) : base(options)
     {
 
