@@ -1,11 +1,16 @@
 
-using Ava.Infrastructure;
 using Ava.Application;
-using System.Reflection;
+using Ava.Infrastructure;
+using Ava.Infrastructure.Db;
+using Ava.Infrastructure.Models;
 using Ava.Infrastructure.Services.PictureService;
 using Ava.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using Ava.Infrastructure.Db;
+using System.Reflection;
+using System.Text;
 
 namespace Ava.Api;
 
@@ -27,9 +32,43 @@ public class Program
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddApplicationServices();
 
-        builder.Configuration.AddEnvironmentVariables()
-    .AddUserSecrets(Assembly.GetAssembly(typeof(PictureService))!, true);
+        builder.Services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<AvaDbContext>()
+            .AddDefaultTokenProviders();
 
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequiredLength = 1;
+        });
+
+        builder.Configuration.AddEnvironmentVariables()
+            .AddUserSecrets(Assembly.GetAssembly(typeof(PictureService))!, true);
+
+        builder.Services.AddAuthorization();
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidAudience = builder.Configuration.GetValue<string>("JwtSettings:Audience"),
+                    ValidIssuer = builder.Configuration.GetValue<string>("JwtSettings:Issuer"),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JwtSettings:Key")))
+                };
+            });
 
         var app = builder.Build();
 
@@ -50,7 +89,6 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 
