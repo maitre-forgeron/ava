@@ -2,10 +2,6 @@
 {
     public class Therapist : Entity
     {
-        public Therapist()
-        {
-        }
-
         public Guid UserProfileId { get; init; }
         public decimal Rating { get; set; }
         public string Summary { get; set; }

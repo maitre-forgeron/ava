@@ -39,7 +39,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Customer", b =>
@@ -62,7 +62,7 @@ namespace Ava.Infrastructure.Migrations
                     b.HasIndex("UserProfileId")
                         .IsUnique();
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Review", b =>
@@ -101,7 +101,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasIndex("TherapistId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Therapist", b =>
@@ -134,7 +134,7 @@ namespace Ava.Infrastructure.Migrations
                     b.HasIndex("UserProfileId")
                         .IsUnique();
 
-                    b.ToTable("Therapists");
+                    b.ToTable("Therapists", (string)null);
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.UserProfile", b =>
@@ -182,7 +182,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -10,16 +10,15 @@ public abstract class Entity
 
     protected Entity()
     {
+        CreateDate = DateTime.UtcNow;
     }
 
-    protected Entity(Guid id)
+    protected Entity(Guid id) : this()
     {
         if (id == default)
         {
             throw new InvalidOperationException("Id is required");
         }
-
-        CreateDate = DateTime.UtcNow;
     }
 
     protected virtual void Update()
