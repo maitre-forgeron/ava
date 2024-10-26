@@ -52,14 +52,47 @@ public class AvaDbContextInitialiser
     {
         if (_context.Database.CanConnect())
         {
-            SeedUsers(_context);
             SeedRoles(_context);
+            SeedUsers(_context);
             CreateCategories(_context);
 
             await _context.SaveChangesAsync();
         }
     }
+    private void SeedRoles(AvaDbContext context)
+    {
+        if (!context.Roles.Any())
+        {
+            var roles = new List<IdentityRole>
+            {
+                new IdentityRole("admin"),
+                new IdentityRole("customer"),
+                new IdentityRole("therapist")
+            };
 
+            context.Roles.AddRange(roles);
+        }
+    }
+    private void SeedUsers(AvaDbContext context)
+    {
+        if (!context.Users.Any())
+        {
+            var admin = new User
+            {
+                UserName = "admin",
+                Email = "admin@ava.ge",
+            };
+
+            var adminRole = context.Roles.FirstOrDefault(x => x.Name == "admin");
+
+            if (adminRole is not null)
+            {
+                context.UserRoles.Add(new IdentityUserRole<string> { UserId = admin.Id, RoleId = adminRole.Id });
+            }
+
+            var result = _userManager.CreateAsync(admin, "admin1234").Result;
+        }
+    }
     private void CreateCategories(AvaDbContext context)
     {
         if (!context.Categories.Any())
@@ -206,40 +239,6 @@ public class AvaDbContextInitialiser
             categories.Add(specializedTherapyCategory);
 
             context.AddRange(categories);
-        }
-    }
-    private void SeedRoles(AvaDbContext context)
-    {
-        if (!context.Roles.Any())
-        {
-            var roles = new List<IdentityRole>
-            {
-                new IdentityRole("admin"),
-                new IdentityRole("customer"),
-                new IdentityRole("therapist")
-            };
-
-            context.Roles.AddRange(roles);
-        }
-    }
-    private void SeedUsers(AvaDbContext context)
-    {
-        if (!context.Users.Any())
-        {
-            var admin = new User
-            {
-                UserName = "admin",
-                Email = "admin@ava.ge",
-            };
-
-            var adminRole = context.Roles.FirstOrDefault(x => x.Name == "admin");
-
-            if (adminRole is not null)
-            {
-                context.UserRoles.Add(new IdentityUserRole<string> { UserId = admin.Id, RoleId = adminRole.Id });
-            }
-
-            var result = _userManager.CreateAsync(admin, "admin1234").Result;
         }
     }
 

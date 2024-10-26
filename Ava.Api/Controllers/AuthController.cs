@@ -63,7 +63,11 @@ namespace Ava.Api.Controllers
 
             var result = await _userManager.CreateAsync(newUser, model.Password);
 
-            if (result.Succeeded)
+            var claimsResult = await AddClaims(newUser);
+
+            // Add UserProfile Creation
+
+            if (result.Succeeded && claimsResult.Succeeded)
             {
                 return Ok();
             }
@@ -86,14 +90,26 @@ namespace Ava.Api.Controllers
             return token;
         }
 
+        private async Task<IdentityResult> AddClaims(User newUser)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(CustomClaimType.Subject, newUser.Id),
+                new Claim(CustomClaimType.Name, newUser.UserName ?? string.Empty),
+                new Claim(CustomClaimType.Email, newUser.Email ?? string.Empty),
+                //new Claim(CustomClaimType.Role, newUser)
+                //new Claim(CustomClaimType.Scopes, )
+                //new Claim(CustomClaimType.FamilyName, newUser.)
+            };
+
+            var result = await _userManager.AddClaimsAsync(newUser, claims);
+
+            return result;
+        }
+
         private async Task<List<Claim>> GetClaims(User user)
         {
-            //await _userManager.GetClaimsAsync(user);
-
-            var authClaims = new List<Claim>
-            {
-                new Claim("Username", user.UserName),
-            };
+            var authClaims = await _userManager.GetClaimsAsync(user);
 
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -102,7 +118,7 @@ namespace Ava.Api.Controllers
                 authClaims.Add(new Claim("Role", role));
             }
 
-            return authClaims;
+            return authClaims.ToList();
         }
     }
 }
