@@ -2,7 +2,7 @@
 
 public abstract class Repository<T> : IRepository<T> where T : Entity
 {
-    private readonly AvaDbContext _context;
+    protected readonly AvaDbContext _context;
 
     public Repository(AvaDbContext context)
     {

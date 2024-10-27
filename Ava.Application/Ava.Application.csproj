@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ava.Domain\Ava.Domain.csproj" />
     <ProjectReference Include="..\Ava.Infrastructure\Ava.Infrastructure.csproj" />
   </ItemGroup>
 
