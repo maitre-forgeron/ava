@@ -1,4 +1,5 @@
 ﻿using Ava.Domain.Models.Category;
+using Ava.Domain.Models.User;
 using Ava.Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -84,15 +85,64 @@ public class AvaDbContextInitialiser
             };
 
             var adminRole = context.Roles.FirstOrDefault(x => x.Name == "admin");
-
             if (adminRole is not null)
             {
                 context.UserRoles.Add(new IdentityUserRole<string> { UserId = admin.Id, RoleId = adminRole.Id });
             }
 
-            var result = _userManager.CreateAsync(admin, "admin1234").Result;
+            _userManager.CreateAsync(admin, "admin1234").Wait();
+
+            var customerUser = new User
+            {
+                UserName = "customer",
+                Email = "customer@ava.ge",
+            };
+
+            var customerResult = _userManager.CreateAsync(customerUser, "customer1234").Result;
+            if (customerResult.Succeeded)
+            {
+                var customerProfile = new UserProfile("John", "Doe", "1234567890", Guid.NewGuid())
+                {
+                    SubjectId = customerUser.Id,
+                    Phone = "555-0100",
+                    Email = customerUser.Email,
+                    UserName = customerUser.UserName,
+                };
+
+                context.UserProfiles.Add(customerProfile);
+                context.Customers.Add(new Customer { UserProfile = customerProfile });
+            }
+
+            var therapistUser = new User
+            {
+                UserName = "therapist",
+                Email = "therapist@ava.ge",
+            };
+
+            var therapistResult = _userManager.CreateAsync(therapistUser, "therapist1234").Result;
+            if (therapistResult.Succeeded)
+            {
+                var therapistProfile = new UserProfile("Jane", "Smith", "0987654321", Guid.NewGuid())
+                {
+                    SubjectId = therapistUser.Id,
+                    Phone = "555-0200",
+                    Email = therapistUser.Email,
+                    UserName = therapistUser.UserName,
+                };
+
+                context.UserProfiles.Add(therapistProfile);
+                context.Therapists.Add(new Therapist
+                {
+                    UserProfile = therapistProfile,
+                    Rating = 4.5m,
+                    Summary = "Experienced therapist specializing in shitty behavioral therapy."
+                });
+            }
+
+            context.SaveChanges();
         }
     }
+
     private void CreateCategories(AvaDbContext context)
     {
         if (!context.Categories.Any())

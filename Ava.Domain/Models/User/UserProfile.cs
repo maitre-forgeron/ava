@@ -2,11 +2,13 @@
 {
     public class UserProfile : Entity
     {
-        public UserProfile(string firstName, string lastName, string personalId)
+        public UserProfile(string firstName, string lastName, string personalId, Guid photo)
         {
             FirstName = firstName;
             LastName = lastName;
             PersonalId = personalId;
+            Photo = photo;
+
         }
 
         /// <summary>
