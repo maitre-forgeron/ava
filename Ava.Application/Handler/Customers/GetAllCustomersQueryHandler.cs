@@ -1,11 +1,11 @@
-﻿using Ava.Application.Queries.Customers;
+﻿using Ava.Application.Dtos;
+using Ava.Application.Queries.Customers;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
-using Ava.Domain.Models.User;
 using MediatR;
 
 namespace Ava.Application.Handler.Customers
 {
-    public class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustomersQuery, IEnumerable<Customer>>
+    public class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustomersQuery, IEnumerable<CustomerDto>>
     {
         private readonly ICustomerRepository _customerRepository;
 
@@ -14,9 +14,16 @@ namespace Ava.Application.Handler.Customers
             _customerRepository = customerRepository;
         }
 
-        public async Task<IEnumerable<Customer>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CustomerDto>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
         {
-            return await _customerRepository.GetAllAsync();
+            var customers = await _customerRepository.GetAllAsync();
+
+            var customerDtos = customers.Select(c => new CustomerDto
+            {
+                UserProfileId = c.UserProfileId,
+            });
+
+            return customerDtos;
         }
     }
 }

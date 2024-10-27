@@ -1,5 +1,6 @@
 ﻿using Ava.Application.Commands.Customers;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
+using Ava.Domain.Models.User;
 using MediatR;
 
 namespace Ava.Application.Handler.Customers
@@ -15,7 +16,12 @@ namespace Ava.Application.Handler.Customers
 
         public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            await _customerRepository.UpdateCustomerAsync(request.Customer);
+            var customer = new Customer
+            {
+                UserProfileId = request.CustomerDto.UserProfileId
+            };
+
+            await _customerRepository.UpdateCustomerAsync(customer);
             return Unit.Value;
         }
     }

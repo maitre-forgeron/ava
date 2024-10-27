@@ -16,8 +16,13 @@ namespace Ava.Application.Handler.Customers
 
         public async Task<Customer> Handle(AddCustomerCommand request, CancellationToken cancellationToken)
         {
-            await _customerRepository.AddCustomerAsync(request.Customer);
-            return request.Customer;
+            var customer = new Customer
+            {
+                UserProfileId = request.CustomerDto.UserProfileId
+            };
+
+            await _customerRepository.AddCustomerAsync(customer);
+            return customer;
         }
     }
 }

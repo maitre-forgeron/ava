@@ -131,12 +131,13 @@ public class AvaDbContextInitialiser
                 };
 
                 context.UserProfiles.Add(therapistProfile);
-                context.Therapists.Add(new Therapist
-                {
-                    UserProfile = therapistProfile,
-                    Rating = 4.5m,
-                    Summary = "Experienced therapist specializing in shitty behavioral therapy."
-                });
+                context.Therapists.Add(new Therapist(
+                    Guid.NewGuid(),
+                    4.5m,
+                    "Experienced therapist specializing in shitty behavioral therapy.",
+                    Guid.NewGuid()
+                ));
+
             }
 
             context.SaveChanges();

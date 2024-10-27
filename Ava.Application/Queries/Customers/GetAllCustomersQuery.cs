@@ -1,9 +1,9 @@
-﻿using Ava.Domain.Models.User;
+﻿using Ava.Application.Dtos;
 using MediatR;
 
 namespace Ava.Application.Queries.Customers
 {
-    public class GetAllCustomersQuery : IRequest<IEnumerable<Customer>>
+    public class GetAllCustomersQuery : IRequest<IEnumerable<CustomerDto>>
     {
     }
 }

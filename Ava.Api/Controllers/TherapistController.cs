@@ -1,8 +1,6 @@
-﻿using Ava.Application.Commands;
-using Ava.Application.Commands.Therapists;
-using Ava.Application.Queries;
+﻿using Ava.Application.Commands.Therapists;
 using Ava.Application.Queries.Therapists;
-using Ava.Domain.Models.User;
+using Ava.Application.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,30 +21,34 @@ namespace Ava.Api.Controllers
         public async Task<IActionResult> GetAllTherapists()
         {
             var therapists = await _mediator.Send(new GetAllTherapistsQuery());
-            if (therapists == null) return NotFound();
+            if (therapists == null || !therapists.Any()) return NotFound();
             return Ok(therapists);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTherapistProfile(Guid id)
         {
-            var therapist = await _mediator.Send(new GetTherapistProfileQuery { Id = id });
+            var query = new GetTherapistProfileQuery { Id = id };
+            var therapist = await _mediator.Send(query);
             if (therapist == null) return NotFound();
             return Ok(therapist);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTherapist([FromBody] Therapist therapist)
+        public async Task<IActionResult> AddTherapist([FromBody] TherapistDto therapistDto)
         {
-            await _mediator.Send(new AddTherapistCommand { Therapist = therapist });
-            return CreatedAtAction(nameof(GetTherapistProfile), new { id = therapist.Id }, therapist);
+            if (therapistDto == null) return BadRequest("Therapist data is required.");
+
+            var result = await _mediator.Send(new AddTherapistCommand(therapistDto));
+            return CreatedAtAction(nameof(GetTherapistProfile), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTherapist(Guid id, [FromBody] Therapist therapist)
+        public async Task<IActionResult> UpdateTherapist(Guid id, [FromBody] TherapistDto therapistDto)
         {
-            if (id != therapist.Id) return BadRequest();
-            await _mediator.Send(new UpdateTherapistCommand { Therapist = therapist });
+            if (therapistDto == null || id != therapistDto.Id) return BadRequest();
+
+            await _mediator.Send(new UpdateTherapistCommand { Therapist = therapistDto });
             return NoContent();
         }
 

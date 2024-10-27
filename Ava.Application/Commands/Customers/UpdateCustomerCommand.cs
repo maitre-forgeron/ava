@@ -1,15 +1,15 @@
-﻿using Ava.Domain.Models.User;
+﻿using Ava.Application.Dtos;
 using MediatR;
 
 namespace Ava.Application.Commands.Customers
 {
     public class UpdateCustomerCommand : IRequest<Unit>
     {
-        public Customer Customer { get; set; }
+        public CustomerDto CustomerDto { get; set; }
 
-        public UpdateCustomerCommand(Customer customer)
+        public UpdateCustomerCommand(CustomerDto customerDto)
         {
-            Customer = customer;
+            CustomerDto = customerDto;
         }
     }
 }

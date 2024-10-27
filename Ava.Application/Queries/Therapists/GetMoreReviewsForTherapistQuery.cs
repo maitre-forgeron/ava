@@ -1,9 +1,9 @@
-﻿using Ava.Domain.Models.User;
+﻿using Ava.Application.Dtos;
 using MediatR;
 
 namespace Ava.Application.Queries.Therapists
 {
-    public class GetMoreReviewsForTherapistQuery : IRequest<List<Review>>
+    public class GetMoreReviewsForTherapistQuery : IRequest<List<ReviewDto>>
     {
         public Guid TherapistId { get; set; }
         public int Skip { get; set; }

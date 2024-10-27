@@ -1,4 +1,5 @@
 ﻿using Ava.Application.Commands.Customers;
+using Ava.Application.Dtos;
 using Ava.Application.Queries.Customers;
 using Ava.Domain.Models.User;
 using MediatR;
@@ -34,14 +35,14 @@ namespace Ava.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCustomer([FromBody] Customer customer)
+        public async Task<IActionResult> AddCustomer([FromBody] CustomerDto customer)
         {
             var result = await _mediator.Send(new AddCustomerCommand(customer));
             return CreatedAtAction(nameof(GetCustomerProfile), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] Customer customer)
+        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] CustomerDto customer)
         {
             if (id != customer.Id) return BadRequest();
             await _mediator.Send(new UpdateCustomerCommand(customer));

@@ -1,10 +1,10 @@
-﻿using Ava.Domain.Models.User;
+﻿using Ava.Application.Dtos;
 using MediatR;
 
 namespace Ava.Application.Commands.Therapists
 {
     public class UpdateTherapistCommand : IRequest
     {
-        public Therapist Therapist { get; set; }
+        public TherapistDto Therapist { get; set; }
     }
 }
