@@ -1,10 +1,13 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Application.Queries.Customers;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Handler.Customers
+namespace Ava.Application.Customers.Queries
 {
+    public class GetAllCustomersQuery : IRequest<IEnumerable<CustomerDto>>
+    {
+    }
+
     public class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustomersQuery, IEnumerable<CustomerDto>>
     {
         private readonly ICustomerRepository _customerRepository;

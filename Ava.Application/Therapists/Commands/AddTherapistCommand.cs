@@ -1,11 +1,20 @@
-﻿using Ava.Application.Commands.Therapists;
-using Ava.Application.Dtos;
+﻿using Ava.Application.Dtos;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using Ava.Domain.Models.User;
 using MediatR;
 
-namespace Ava.Application.Handler.Therapists
+namespace Ava.Application.Therapists.Commands
 {
+    public class AddTherapistCommand : IRequest<TherapistDto>
+    {
+        public TherapistDto TherapistDto { get; set; }
+
+        public AddTherapistCommand(TherapistDto therapistDto)
+        {
+            TherapistDto = therapistDto;
+        }
+    }
+
     public class AddTherapistCommandHandler : IRequestHandler<AddTherapistCommand, TherapistDto>
     {
         private readonly ITherapistRepository _therapistRepository;

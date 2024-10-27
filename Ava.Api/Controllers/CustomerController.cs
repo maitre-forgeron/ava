@@ -1,7 +1,6 @@
-﻿using Ava.Application.Commands.Customers;
+﻿using Ava.Application.Customers.Commands;
+using Ava.Application.Customers.Queries;
 using Ava.Application.Dtos;
-using Ava.Application.Queries.Customers;
-using Ava.Domain.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,9 +1,13 @@
-﻿using Ava.Application.Commands.Therapists;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
+﻿using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Handler.Therapists
+namespace Ava.Application.Therapists.Commands
 {
+    public class DeleteTherapistCommand : IRequest
+    {
+        public Guid Id { get; set; }
+    }
+
     public class DeleteTherapistCommandHandler : IRequestHandler<DeleteTherapistCommand>
     {
         private readonly ITherapistRepository _therapistRepository;

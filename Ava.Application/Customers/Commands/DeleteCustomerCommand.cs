@@ -1,9 +1,18 @@
-﻿using Ava.Application.Commands.Customers;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
+﻿using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Handler.Customers
+namespace Ava.Application.Customers.Commands
 {
+    public class DeleteCustomerCommand : IRequest<Unit>
+    {
+        public Guid Id { get; set; }
+
+        public DeleteCustomerCommand(Guid id)
+        {
+            Id = id;
+        }
+    }
+
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Unit>
     {
         private readonly ICustomerRepository _customerRepository;

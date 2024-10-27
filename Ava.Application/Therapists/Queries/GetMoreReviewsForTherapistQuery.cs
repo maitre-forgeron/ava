@@ -1,10 +1,16 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Application.Queries.Therapists;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Handler.Therapists
+namespace Ava.Application.Therapists.Queries
 {
+    public class GetMoreReviewsForTherapistQuery : IRequest<List<ReviewDto>>
+    {
+        public Guid TherapistId { get; set; }
+        public int Skip { get; set; }
+        public int Take { get; set; }
+    }
+
     public class GetMoreReviewsForTherapistQueryHandler : IRequestHandler<GetMoreReviewsForTherapistQuery, List<ReviewDto>>
     {
         private readonly ITherapistRepository _therapistRepository;

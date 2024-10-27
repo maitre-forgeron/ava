@@ -1,6 +1,6 @@
-﻿using Ava.Application.Commands.Therapists;
-using Ava.Application.Queries.Therapists;
-using Ava.Application.Dtos;
+﻿using Ava.Application.Dtos;
+using Ava.Application.Therapists.Commands;
+using Ava.Application.Therapists.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

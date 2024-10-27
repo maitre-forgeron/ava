@@ -1,10 +1,20 @@
-﻿using Ava.Application.Commands.Customers;
+﻿using Ava.Application.Dtos;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using Ava.Domain.Models.User;
 using MediatR;
 
-namespace Ava.Application.Handler.Customers
+namespace Ava.Application.Customers.Commands
 {
+    public class UpdateCustomerCommand : IRequest<Unit>
+    {
+        public CustomerDto CustomerDto { get; set; }
+
+        public UpdateCustomerCommand(CustomerDto customerDto)
+        {
+            CustomerDto = customerDto;
+        }
+    }
+
     public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
     {
         private readonly ICustomerRepository _customerRepository;

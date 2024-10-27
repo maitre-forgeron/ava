@@ -1,10 +1,11 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Application.Queries.Therapists;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Handler.Therapists
+namespace Ava.Application.Therapists.Queries
 {
+    public class GetAllTherapistsQuery : IRequest<IEnumerable<TherapistDto>> { }
+
     public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuery, IEnumerable<TherapistDto>>
     {
         private readonly ITherapistRepository _therapistRepository;

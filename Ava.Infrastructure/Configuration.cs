@@ -1,8 +1,6 @@
 ﻿using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using Ava.Infrastructure.Repositories.UserRepositories;
 using Ava.Infrastructure.Services.PictureService;
-using Ava.Infrastructure.Services.UserService;
-using Ava.Infrastructure.Services.UserService.Interfaces;
 
 namespace Ava.Infrastructure;
 
@@ -25,9 +23,6 @@ public static class Configuration
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<IPictureService, PictureService>();
-        services.AddScoped<ICustomerService, CustomerService>();
-        services.AddScoped<ITherapistService, TherapistService>();
-        services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<ITherapistRepository, TherapistRepository>();

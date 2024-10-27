@@ -1,10 +1,15 @@
-﻿using Ava.Application.Commands.Therapists;
+﻿using Ava.Application.Dtos;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using Ava.Domain.Models.User;
 using MediatR;
 
-namespace Ava.Application.Handler.Therapists
+namespace Ava.Application.Therapists.Commands
 {
+    public class UpdateTherapistCommand : IRequest
+    {
+        public TherapistDto Therapist { get; set; }
+    }
+
     public class UpdateTherapistCommandHandler : IRequestHandler<UpdateTherapistCommand>
     {
         private readonly ITherapistRepository _therapistRepository;

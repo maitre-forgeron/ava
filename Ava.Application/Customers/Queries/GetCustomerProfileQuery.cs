@@ -1,10 +1,19 @@
-﻿using Ava.Application.Queries.Customers;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
+﻿using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using Ava.Domain.Models.User;
 using MediatR;
 
-namespace Ava.Application.Handler.Customers
+namespace Ava.Application.Customers.Queries
 {
+    public class GetCustomerProfileQuery : IRequest<Customer>
+    {
+        public Guid Id { get; set; }
+
+        public GetCustomerProfileQuery(Guid id)
+        {
+            Id = id;
+        }
+    }
+
     public class GetCustomerProfileQueryHandler : IRequestHandler<GetCustomerProfileQuery, Customer>
     {
         private readonly ICustomerRepository _customerRepository;
