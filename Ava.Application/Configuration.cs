@@ -1,6 +1,4 @@
-﻿using Ava.Application.ForTest.Commands;
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Ava.Application
@@ -9,7 +7,7 @@ namespace Ava.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetAssembly(typeof(ForTestCommand))!));
+            services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
             return services;
         }
