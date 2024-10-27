@@ -1,5 +1,7 @@
-﻿using Ava.Domain.Models.User;
-using Ava.Infrastructure.Services.UserService.Interfaces;
+﻿using Ava.Application.Commands.Customers;
+using Ava.Application.Queries.Customers;
+using Ava.Domain.Models.User;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ava.Api.Controllers
@@ -8,17 +10,17 @@ namespace Ava.Api.Controllers
     [Route("Customer")]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerService _customerService;
+        private readonly IMediator _mediator;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(IMediator mediator)
         {
-            _customerService = customerService;
+            _mediator = mediator;
         }
 
         [HttpGet("allcustomers")]
         public async Task<IActionResult> GetAllCustomers()
         {
-            var customers = await _customerService.GetAllCustomersAsync();
+            var customers = await _mediator.Send(new GetAllCustomersQuery());
             if (customers == null) return NotFound();
             return Ok(customers);
         }
@@ -26,7 +28,7 @@ namespace Ava.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomerProfile(Guid id)
         {
-            var customer = await _customerService.GetCustomerProfileAsync(id);
+            var customer = await _mediator.Send(new GetCustomerProfileQuery(id));
             if (customer == null) return NotFound();
             return Ok(customer);
         }
@@ -34,22 +36,22 @@ namespace Ava.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCustomer([FromBody] Customer customer)
         {
-            await _customerService.AddCustomerAsync(customer);
-            return CreatedAtAction(nameof(GetCustomerProfile), new { id = customer.Id }, customer);
+            var result = await _mediator.Send(new AddCustomerCommand(customer));
+            return CreatedAtAction(nameof(GetCustomerProfile), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] Customer customer)
         {
             if (id != customer.Id) return BadRequest();
-            await _customerService.UpdateCustomerAsync(customer);
+            await _mediator.Send(new UpdateCustomerCommand(customer));
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
-            await _customerService.DeleteCustomerAsync(id);
+            await _mediator.Send(new DeleteCustomerCommand(id));
             return NoContent();
         }
     }
