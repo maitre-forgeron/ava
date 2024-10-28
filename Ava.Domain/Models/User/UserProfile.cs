@@ -1,34 +1,46 @@
-﻿namespace Ava.Domain.Models.User
+﻿namespace Ava.Domain.Models.User;
+
+public abstract class UserProfile : AggregateRoot
 {
-    public class UserProfile : Entity
+    public Guid UserId { get; private set; }
+
+    public string UserName { get; private set; }
+
+    public string Email { get; private set; }
+
+    public string Phone { get; private set; }
+
+    public string FirstName { get; private set; }
+
+    public string LastName { get; private set; }
+
+    public string PersonalId { get; private set; }
+
+    public Guid? PhotoId { get; private set; }
+
+    private List<Review> _senderReviews;
+    public IReadOnlyCollection<Review> SenderReviews => _senderReviews.AsReadOnly();
+
+    public List<Review> _recipientReviews;
+    public IReadOnlyCollection<Review> RecipientReviews => _recipientReviews.AsReadOnly();
+
+    protected UserProfile()
     {
-        public UserProfile(string firstName, string lastName, string personalId, Guid photo)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            PersonalId = personalId;
-            Photo = photo;
+    }
 
-        }
+    public UserProfile(Guid userId, string userName, string email, string phone, string firstName, string lastName, string personalId)
+    {
+        UserId = userId;
+        UserName = userName;
+        Email = email;
+        Phone = phone;
+        FirstName = firstName;
+        LastName = lastName;
+        PersonalId = personalId;
+    }
 
-        /// <summary>
-        /// UserId
-        /// </summary>
-        public string SubjectId { get; init; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string PersonalId { get; private set; }
-        public Guid Photo { get; private set; }
-
-        public void SetPhoto(Guid photo)
-        {
-            Photo = photo;
-        }
-
-        public List<Review> SenderReviews { get; set; }
-        public List<Review> RecipientReviews { get; set; }
+    public void SetPhoto(Guid photoId)
+    {
+        PhotoId = photoId;
     }
 }

@@ -25,10 +25,10 @@ namespace Ava.Application.Therapists.Commands
             {
                 Reviews = request.Therapist.Reviews.Select(r => new Review
                 {
-                    SenderId = r.SenderId,
+                    AuthorId = r.SenderId,
                     RecipientId = r.RecipientId,
-                    ReviewValue = r.ReviewValue,
-                    ReviewText = r.ReviewText
+                    Rating = r.ReviewValue,
+                    Summary = r.ReviewText
                 }).ToList()
             };
 

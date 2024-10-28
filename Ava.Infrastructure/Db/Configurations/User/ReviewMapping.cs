@@ -10,12 +10,12 @@ namespace Ava.Infrastructure.Db.Configurations.User
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.CreateDate).IsRequired();
-            builder.Property(x => x.SenderId).IsRequired();
+            builder.Property(x => x.AuthorId).IsRequired();
             builder.Property(x => x.RecipientId).IsRequired();
 
-            builder.HasOne(x => x.Sender)
+            builder.HasOne(x => x.Author)
                 .WithMany(x => x.SenderReviews)
-                .HasForeignKey(x => x.SenderId)
+                .HasForeignKey(x => x.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Recipient)

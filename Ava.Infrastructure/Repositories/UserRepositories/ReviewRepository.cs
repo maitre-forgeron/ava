@@ -10,7 +10,7 @@ namespace Ava.Infrastructure.Repositories.UserRepositories
         public async Task<List<Review>> GetReviewsForRecipientAsync(Guid recipientId, int skip, int take)
         {
             return await GetQueryable(r => r.RecipientId == recipientId, false)
-                         .OrderByDescending(r => r.ReviewValue)
+                         .OrderByDescending(r => r.Rating)
                          .Skip(skip)
                          .Take(take)
                          .ToListAsync();

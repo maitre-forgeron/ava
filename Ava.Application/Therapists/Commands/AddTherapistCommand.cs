@@ -39,11 +39,11 @@ namespace Ava.Application.Therapists.Commands
                 {
                     var review = new Review
                     {
-                        SenderId = reviewDto.SenderId,
+                        AuthorId = reviewDto.SenderId,
                         RecipientId = reviewDto.RecipientId,
-                        ReviewValue = reviewDto.ReviewValue,
-                        ReviewText = reviewDto.ReviewText,
-                        Sender = null,
+                        Rating = reviewDto.ReviewValue,
+                        Summary = reviewDto.ReviewText,
+                        Author = null,
                         Recipient = null
                     };
                     therapist.Reviews.Add(review);

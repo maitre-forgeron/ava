@@ -9,7 +9,7 @@ namespace Ava.Infrastructure.Db.Configurations.User
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.SubjectId).IsRequired();
+            builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.UserName).IsRequired();
             builder.Property(x => x.Email).IsRequired();
             builder.Property(x => x.Phone).IsRequired();

@@ -103,7 +103,7 @@ public class AvaDbContextInitialiser
             {
                 var customerProfile = new UserProfile("John", "Doe", "1234567890", Guid.NewGuid())
                 {
-                    SubjectId = customerUser.Id,
+                    UserId = customerUser.Id,
                     Phone = "555-0100",
                     Email = customerUser.Email,
                     UserName = customerUser.UserName,
@@ -124,7 +124,7 @@ public class AvaDbContextInitialiser
             {
                 var therapistProfile = new UserProfile("Jane", "Smith", "0987654321", Guid.NewGuid())
                 {
-                    SubjectId = therapistUser.Id,
+                    UserId = therapistUser.Id,
                     Phone = "555-0200",
                     Email = therapistUser.Email,
                     UserName = therapistUser.UserName,
