@@ -2,8 +2,6 @@
 
 public abstract class UserProfile : AggregateRoot
 {
-    public Guid UserId { get; private set; }
-
     public string UserName { get; private set; }
 
     public string Email { get; private set; }
@@ -28,9 +26,9 @@ public abstract class UserProfile : AggregateRoot
     {
     }
 
-    public UserProfile(Guid userId, string userName, string email, string phone, string firstName, string lastName, string personalId)
+    public UserProfile(Guid userId, string userName, string email, string phone, string firstName, string lastName, string personalId) : base(userId)
     {
-        UserId = userId;
+        Id = userId;
         UserName = userName;
         Email = email;
         Phone = phone;

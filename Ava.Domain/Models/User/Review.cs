@@ -18,7 +18,7 @@ public class Review : Entity
     {
     }
 
-    public Review(Guid authorId, Guid recipientId, int rating, string summary)
+    public Review(Guid id, Guid authorId, Guid recipientId, int rating, string summary) : base(id)
     {
         AuthorId = authorId;
         RecipientId = recipientId;
