@@ -2,7 +2,7 @@
 
 public class Therapist : UserProfile
 {
-    public decimal Rating { get; private set; }
+    public double Rating { get; private set; }
 
     public string Summary { get; private set; }
 
@@ -12,7 +12,7 @@ public class Therapist : UserProfile
     {
     }
 
-    public Therapist(Guid userId, string userName, string email, string phone, string firstName, string lastName, string personalId, decimal rating, string summary, Guid certificateId)
+    public Therapist(Guid userId, string userName, string email, string phone, string firstName, string lastName, string personalId, double rating, string summary, Guid certificateId)
         : base(userId, userName, email, phone, firstName, lastName, personalId)
     {
         Rating = rating;

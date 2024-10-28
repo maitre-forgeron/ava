@@ -4,7 +4,7 @@ namespace Ava.Domain.Interfaces.Repositories.UserRepositories
 {
     public interface ITherapistRepository : IRepository<Therapist>
     {
-        Task<Therapist> GetTherapistByIdAsync(Guid id);
+        Task<Therapist?> GetTherapistByIdAsync(Guid id);
         Task AddTherapistAsync(Therapist therapist);
         Task UpdateTherapistAsync(Therapist therapist);
         Task DeleteTherapistAsync(Guid id);

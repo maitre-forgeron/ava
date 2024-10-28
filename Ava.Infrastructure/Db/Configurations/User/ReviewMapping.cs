@@ -8,7 +8,7 @@ public class ReviewMapping : IEntityTypeConfiguration<Review>
     public void Configure(EntityTypeBuilder<Review> builder)
     {
         builder.HasOne(x => x.Author)
-            .WithMany(x => x.SenderReviews)
+            .WithMany(x => x.AuthorReviews)
             .HasForeignKey(x => x.AuthorId)
             .OnDelete(DeleteBehavior.Restrict);
 

@@ -7,9 +7,9 @@ namespace Ava.Infrastructure.Repositories.UserRepositories
     {
         public TherapistRepository(AvaDbContext context) : base(context) { }
 
-        public async Task<Therapist> GetTherapistByIdAsync(Guid id)
+        public async Task<Therapist?> GetTherapistByIdAsync(Guid id)
         {
-            return await GetByIdAsync(id, x => x.UserProfile, x => x.Reviews);
+            return await GetByIdAsync(id);
         }
 
         public async Task AddTherapistAsync(Therapist therapist)
@@ -36,18 +36,18 @@ namespace Ava.Infrastructure.Repositories.UserRepositories
 
         public async Task<List<Review>> GetTopReviewsForTherapistAsync(Guid therapistId, int count)
         {
-            return await GetQueryable(x => x.Id == therapistId, false, x => x.Reviews)
-                         .SelectMany(t => t.Reviews)
-                         .OrderByDescending(r => r.ReviewValue)
+            return await GetQueryable(x => x.Id == therapistId, false, x => x.RecipientReviews)
+                         .SelectMany(t => t.RecipientReviews)
+                         .OrderByDescending(r => r.Rating)
                          .Take(count)
                          .ToListAsync();
         }
 
         public async Task<List<Review>> GetReviewsForTherapistAsync(Guid therapistId, int skip, int take)
         {
-            return await GetQueryable(x => x.Id == therapistId, false, x => x.Reviews)
-                         .SelectMany(t => t.Reviews)
-                         .OrderByDescending(r => r.ReviewValue)
+            return await GetQueryable(x => x.Id == therapistId, false, x => x.RecipientReviews)
+                         .SelectMany(t => t.RecipientReviews)
+                         .OrderByDescending(r => r.Rating)
                          .Skip(skip)
                          .Take(take)
                          .ToListAsync();

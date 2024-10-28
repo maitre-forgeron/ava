@@ -54,7 +54,7 @@ public class AvaDbContextInitialiser
         if (_context.Database.CanConnect())
         {
             SeedRoles(_context);
-            SeedUsers(_context);
+            await SeedUsers(_context);
             CreateCategories(_context);
 
             await _context.SaveChangesAsync();
@@ -64,17 +64,17 @@ public class AvaDbContextInitialiser
     {
         if (!context.Roles.Any())
         {
-            var roles = new List<IdentityRole>
+            var roles = new List<IdentityRole<Guid>>
             {
-                new IdentityRole("admin"),
-                new IdentityRole("customer"),
-                new IdentityRole("therapist")
+                new IdentityRole<Guid>("admin"),
+                new IdentityRole<Guid>("customer"),
+                new IdentityRole<Guid>("therapist")
             };
 
             context.Roles.AddRange(roles);
         }
     }
-    private void SeedUsers(AvaDbContext context)
+    private async Task SeedUsers(AvaDbContext context)
     {
         if (!context.Users.Any())
         {
@@ -87,7 +87,7 @@ public class AvaDbContextInitialiser
             var adminRole = context.Roles.FirstOrDefault(x => x.Name == "admin");
             if (adminRole is not null)
             {
-                context.UserRoles.Add(new IdentityUserRole<string> { UserId = admin.Id, RoleId = adminRole.Id });
+                context.UserRoles.Add(new IdentityUserRole<Guid> { UserId = admin.Id, RoleId = adminRole.Id });
             }
 
             _userManager.CreateAsync(admin, "admin1234").Wait();
@@ -98,19 +98,13 @@ public class AvaDbContextInitialiser
                 Email = "customer@ava.ge",
             };
 
-            var customerResult = _userManager.CreateAsync(customerUser, "customer1234").Result;
+            var customerResult = await _userManager.CreateAsync(customerUser, "customer1234");
+
             if (customerResult.Succeeded)
             {
-                var customerProfile = new UserProfile("John", "Doe", "1234567890", Guid.NewGuid())
-                {
-                    UserId = customerUser.Id,
-                    Phone = "555-0100",
-                    Email = customerUser.Email,
-                    UserName = customerUser.UserName,
-                };
+                var customer = new Customer(customerUser.Id, customerUser.UserName, customerUser.Email, "555-0100", "John", "Doe", "12345667");
 
-                context.UserProfiles.Add(customerProfile);
-                context.Customers.Add(new Customer { UserProfile = customerProfile });
+                context.Customers.Add(customer);
             }
 
             var therapistUser = new User
@@ -119,28 +113,25 @@ public class AvaDbContextInitialiser
                 Email = "therapist@ava.ge",
             };
 
-            var therapistResult = _userManager.CreateAsync(therapistUser, "therapist1234").Result;
+            var therapistResult = await _userManager.CreateAsync(therapistUser, "therapist1234");
+
             if (therapistResult.Succeeded)
             {
-                var therapistProfile = new UserProfile("Jane", "Smith", "0987654321", Guid.NewGuid())
-                {
-                    UserId = therapistUser.Id,
-                    Phone = "555-0200",
-                    Email = therapistUser.Email,
-                    UserName = therapistUser.UserName,
-                };
+                var therapist = new Therapist(
+                    therapistUser.Id,
+                    therapistUser.UserName,
+                    therapistUser.Email,
+                    "555-0200",
+                    "Jane", 
+                    "Smith",
+                    "0987654321",
+                    4.5d,
+                    "some kind of summary",
+                    Guid.NewGuid());
 
-                context.UserProfiles.Add(therapistProfile);
-                context.Therapists.Add(new Therapist(
-                    Guid.NewGuid(),
-                    4.5m,
-                    "Experienced therapist specializing in shitty behavioral therapy.",
-                    Guid.NewGuid()
-                ));
+                context.Therapists.Add(therapist);
 
             }
-
-            context.SaveChanges();
         }
     }
 

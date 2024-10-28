@@ -16,8 +16,8 @@ public abstract class UserProfile : AggregateRoot
 
     public Guid? PhotoId { get; private set; }
 
-    private List<Review> _senderReviews;
-    public IReadOnlyCollection<Review> SenderReviews => _senderReviews.AsReadOnly();
+    private List<Review> _authorReviews;
+    public IReadOnlyCollection<Review> AuthorReviews => _authorReviews.AsReadOnly();
 
     public List<Review> _recipientReviews;
     public IReadOnlyCollection<Review> RecipientReviews => _recipientReviews.AsReadOnly();

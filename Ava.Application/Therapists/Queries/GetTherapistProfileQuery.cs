@@ -28,12 +28,12 @@ namespace Ava.Application.Therapists.Queries
                 Rating = therapist.Rating,
                 Summary = therapist.Summary,
                 CertificateId = therapist.CertificateId,
-                Reviews = therapist.Reviews.Select(r => new ReviewDto
+                Reviews = therapist.RecipientReviews.Select(r => new ReviewDto
                 {
-                    SenderId = r.SenderId,
+                    AuthorId = r.AuthorId,
                     RecipientId = r.RecipientId,
-                    ReviewValue = r.ReviewValue,
-                    ReviewText = r.ReviewText
+                    Rating = r.Rating,
+                    Summary = r.Summary
                 }).ToList()
             };
         }

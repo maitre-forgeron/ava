@@ -26,10 +26,10 @@ namespace Ava.Application.Therapists.Queries
                 CertificateId = t.CertificateId,
                 Reviews = t.Reviews.Select(r => new ReviewDto
                 {
-                    SenderId = r.SenderId,
+                    AuthorId = r.SenderId,
                     RecipientId = r.RecipientId,
-                    ReviewValue = r.ReviewValue,
-                    ReviewText = r.ReviewText
+                    Rating = r.ReviewValue,
+                    Summary = r.ReviewText
                 }).ToList()
             });
 

@@ -23,10 +23,10 @@ namespace Ava.Application.Therapists.Queries
             var reviews = await _therapistRepository.GetTopReviewsForTherapistAsync(request.TherapistId, 3);
             return reviews.Select(r => new ReviewDto
             {
-                SenderId = r.AuthorId,
+                AuthorId = r.AuthorId,
                 RecipientId = r.RecipientId,
-                ReviewValue = r.Rating,
-                ReviewText = r.Summary
+                Rating = r.Rating,
+                Summary = r.Summary
             }).ToList();
         }
     }

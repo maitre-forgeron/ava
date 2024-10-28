@@ -1,10 +1,12 @@
 ﻿using Ava.Domain.Models.Category;
 using Ava.Domain.Models.User;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Ava.Infrastructure.Db;
 
-public class AvaDbContext : IdentityDbContext
+public class AvaDbContext : 
+    IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
     public DbSet<Customer> Customers { get; set; }
 

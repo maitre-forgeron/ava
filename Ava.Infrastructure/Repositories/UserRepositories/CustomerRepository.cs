@@ -7,9 +7,9 @@ namespace Ava.Infrastructure.Repositories.UserRepositories
     {
         public CustomerRepository(AvaDbContext context) : base(context) { }
 
-        public async Task<Customer> GetCustomerByIdAsync(Guid id)
+        public async Task<Customer?> GetCustomerByIdAsync(Guid id)
         {
-            return await GetByIdAsync(id, x => x.UserProfile);
+            return await GetByIdAsync(id);
         }
 
         public async Task AddCustomerAsync(Customer customer)
