@@ -32,7 +32,7 @@ public class Program
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddApplicationServices();
 
-        builder.Services.AddIdentity<User, IdentityRole>()
+        builder.Services.AddIdentity<User, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AvaDbContext>()
             .AddDefaultTokenProviders();
 

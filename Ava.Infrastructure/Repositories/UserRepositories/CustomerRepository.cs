@@ -18,12 +18,6 @@ namespace Ava.Infrastructure.Repositories.UserRepositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateCustomerAsync(Customer customer)
-        {
-            _context.Set<Customer>().Update(customer);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task DeleteCustomerAsync(Guid id)
         {
             await DeleteAsync(id);

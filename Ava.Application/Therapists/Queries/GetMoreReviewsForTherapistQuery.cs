@@ -2,34 +2,23 @@
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Therapists.Queries
+namespace Ava.Application.Therapists.Queries;
+
+public record GetMoreReviewsForTherapistQuery(Guid TherapistId, int Skip, int Take) : IRequest<List<ReviewDto>>;
+
+public class GetMoreReviewsForTherapistQueryHandler : IRequestHandler<GetMoreReviewsForTherapistQuery, List<ReviewDto>>
 {
-    public class GetMoreReviewsForTherapistQuery : IRequest<List<ReviewDto>>
+    private readonly ITherapistRepository _therapistRepository;
+
+    public GetMoreReviewsForTherapistQueryHandler(ITherapistRepository therapistRepository)
     {
-        public Guid TherapistId { get; set; }
-        public int Skip { get; set; }
-        public int Take { get; set; }
+        _therapistRepository = therapistRepository;
     }
 
-    public class GetMoreReviewsForTherapistQueryHandler : IRequestHandler<GetMoreReviewsForTherapistQuery, List<ReviewDto>>
+    public async Task<List<ReviewDto>> Handle(GetMoreReviewsForTherapistQuery request, CancellationToken cancellationToken)
     {
-        private readonly ITherapistRepository _therapistRepository;
+        var reviews = await _therapistRepository.GetReviewsForTherapistAsync(request.TherapistId, request.Skip, request.Take);
 
-        public GetMoreReviewsForTherapistQueryHandler(ITherapistRepository therapistRepository)
-        {
-            _therapistRepository = therapistRepository;
-        }
-
-        public async Task<List<ReviewDto>> Handle(GetMoreReviewsForTherapistQuery request, CancellationToken cancellationToken)
-        {
-            var reviews = await _therapistRepository.GetReviewsForTherapistAsync(request.TherapistId, request.Skip, request.Take);
-            return reviews.Select(r => new ReviewDto
-            {
-                AuthorId = r.AuthorId,
-                RecipientId = r.RecipientId,
-                Rating = r.Rating,
-                Summary = r.Summary
-            }).ToList();
-        }
+        return reviews.Select(r => new ReviewDto(r.Id, r.AuthorId, r.RecipientId, r.Rating, r.Summary)).ToList();
     }
 }

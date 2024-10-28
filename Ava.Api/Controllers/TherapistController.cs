@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Ava.Api.Controllers
 {
     [ApiController]
-    [Route("Therapist")]
+    [Route("[controller]")]
     public class TherapistController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,55 +21,76 @@ namespace Ava.Api.Controllers
         public async Task<IActionResult> GetAllTherapists()
         {
             var therapists = await _mediator.Send(new GetAllTherapistsQuery());
-            if (therapists == null || !therapists.Any()) return NotFound();
+
+            if (therapists == null || !therapists.Any())
+            {
+                return NotFound();
+            }
+
             return Ok(therapists);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTherapistProfile(Guid id)
         {
-            var query = new GetTherapistProfileQuery { Id = id };
+            var query = new GetTherapistProfileQuery(id);
+
             var therapist = await _mediator.Send(query);
-            if (therapist == null) return NotFound();
+
+            if (therapist == null)
+            {
+                return NotFound();
+            }
+
             return Ok(therapist);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTherapist([FromBody] TherapistDto therapistDto)
+        public async Task<IActionResult> AddTherapist([FromBody] CreateTherapistDto therapistDto)
         {
-            if (therapistDto == null) return BadRequest("Therapist data is required.");
+            if (therapistDto == null)
+            {
+                return BadRequest("Therapist data is required.");
+            }
 
             var result = await _mediator.Send(new AddTherapistCommand(therapistDto));
-            return CreatedAtAction(nameof(GetTherapistProfile), new { id = result.Id }, result);
+
+            return CreatedAtAction(nameof(GetTherapistProfile), new { id = result }, result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTherapist(Guid id, [FromBody] TherapistDto therapistDto)
+        [HttpPut]
+        public async Task<IActionResult> UpdateTherapist([FromBody] UpdateTherapistDto therapistDto)
         {
-            if (therapistDto == null || id != therapistDto.Id) return BadRequest();
+            if (therapistDto == null || therapistDto.Id != therapistDto.Id)
+            {
+                return BadRequest();
+            }
 
-            await _mediator.Send(new UpdateTherapistCommand { Therapist = therapistDto });
+            await _mediator.Send(new UpdateTherapistCommand(therapistDto));
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTherapist(Guid id)
         {
-            await _mediator.Send(new DeleteTherapistCommand { Id = id });
+            await _mediator.Send(new DeleteTherapistCommand(id));
+
             return NoContent();
         }
 
         [HttpGet("{id}/reviews/top")]
         public async Task<IActionResult> GetTopReviews(Guid id)
         {
-            var reviews = await _mediator.Send(new GetTopReviewsForTherapistQuery { TherapistId = id });
+            var reviews = await _mediator.Send(new GetTopReviewsForTherapistQuery(id));
+
             return Ok(reviews);
         }
 
         [HttpGet("{id}/reviews/more")]
         public async Task<IActionResult> GetMoreReviews(Guid id, int skip, int take)
         {
-            var reviews = await _mediator.Send(new GetMoreReviewsForTherapistQuery { TherapistId = id, Skip = skip, Take = take });
+            var reviews = await _mediator.Send(new GetMoreReviewsForTherapistQuery(id, skip, take ));
             return Ok(reviews);
         }
     }

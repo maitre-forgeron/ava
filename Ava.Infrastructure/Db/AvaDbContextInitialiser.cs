@@ -102,7 +102,7 @@ public class AvaDbContextInitialiser
 
             if (customerResult.Succeeded)
             {
-                var customer = new Customer(customerUser.Id, customerUser.UserName, customerUser.Email, "555-0100", "John", "Doe", "12345667");
+                var customer = new Customer(customerUser.Id, "John", "Doe", "12345667");
 
                 context.Customers.Add(customer);
             }
@@ -119,9 +119,6 @@ public class AvaDbContextInitialiser
             {
                 var therapist = new Therapist(
                     therapistUser.Id,
-                    therapistUser.UserName,
-                    therapistUser.Email,
-                    "555-0200",
                     "Jane", 
                     "Smith",
                     "0987654321",

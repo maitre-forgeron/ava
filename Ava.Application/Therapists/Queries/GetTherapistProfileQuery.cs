@@ -2,40 +2,28 @@
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Therapists.Queries
+namespace Ava.Application.Therapists.Queries;
+
+public record GetTherapistProfileQuery(Guid Id) : IRequest<TherapistDto>;
+
+public class GetTherapistProfileQueryHandler : IRequestHandler<GetTherapistProfileQuery, TherapistDto>
 {
-    public class GetTherapistProfileQuery : IRequest<TherapistDto>
+    private readonly ITherapistRepository _therapistRepository;
+
+    public GetTherapistProfileQueryHandler(ITherapistRepository therapistRepository)
     {
-        public Guid Id { get; set; }
+        _therapistRepository = therapistRepository;
     }
 
-    public class GetTherapistProfileQueryHandler : IRequestHandler<GetTherapistProfileQuery, TherapistDto>
+    public async Task<TherapistDto> Handle(GetTherapistProfileQuery request, CancellationToken cancellationToken)
     {
-        private readonly ITherapistRepository _therapistRepository;
+        var therapist = await _therapistRepository.GetTherapistByIdAsync(request.Id);
 
-        public GetTherapistProfileQueryHandler(ITherapistRepository therapistRepository)
-        {
-            _therapistRepository = therapistRepository;
-        }
-
-        public async Task<TherapistDto> Handle(GetTherapistProfileQuery request, CancellationToken cancellationToken)
-        {
-            var therapist = await _therapistRepository.GetTherapistByIdAsync(request.Id);
-            return new TherapistDto
-            {
-                Id = request.Id,
-                UserProfileId = therapist.UserProfileId,
-                Rating = therapist.Rating,
-                Summary = therapist.Summary,
-                CertificateId = therapist.CertificateId,
-                Reviews = therapist.RecipientReviews.Select(r => new ReviewDto
-                {
-                    AuthorId = r.AuthorId,
-                    RecipientId = r.RecipientId,
-                    Rating = r.Rating,
-                    Summary = r.Summary
-                }).ToList()
-            };
-        }
+        return new TherapistDto(
+            therapist.Id,
+            therapist.Rating,
+            therapist.Summary,
+            therapist.CertificateId,
+            therapist.RecipientReviews?.Select(r => new ReviewDto(r.Id, r.AuthorId, r.RecipientId, r.Rating, r.Summary)).ToList());
     }
 }

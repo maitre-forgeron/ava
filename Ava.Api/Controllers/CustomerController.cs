@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Ava.Api.Controllers
 {
     [ApiController]
-    [Route("Customer")]
+    [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -15,14 +15,6 @@ namespace Ava.Api.Controllers
         public CustomerController(IMediator mediator)
         {
             _mediator = mediator;
-        }
-
-        [HttpGet("allcustomers")]
-        public async Task<IActionResult> GetAllCustomers()
-        {
-            var customers = await _mediator.Send(new GetAllCustomersQuery());
-            if (customers == null) return NotFound();
-            return Ok(customers);
         }
 
         [HttpGet("{id}")]
@@ -34,14 +26,15 @@ namespace Ava.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCustomer([FromBody] CustomerDto customer)
+        public async Task<IActionResult> AddCustomer([FromBody] CreateCustomerDto customer)
         {
             var result = await _mediator.Send(new AddCustomerCommand(customer));
+
             return CreatedAtAction(nameof(GetCustomerProfile), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] CustomerDto customer)
+        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] UpdateCustomerDto customer)
         {
             if (id != customer.Id) return BadRequest();
             await _mediator.Send(new UpdateCustomerCommand(customer));

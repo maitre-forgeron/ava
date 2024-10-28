@@ -6,7 +6,6 @@ namespace Ava.Domain.Interfaces.Repositories.UserRepositories
     {
         Task<Therapist?> GetTherapistByIdAsync(Guid id);
         Task AddTherapistAsync(Therapist therapist);
-        Task UpdateTherapistAsync(Therapist therapist);
         Task DeleteTherapistAsync(Guid id);
 
         Task<List<Review>> GetTopReviewsForTherapistAsync(Guid therapistId, int count);

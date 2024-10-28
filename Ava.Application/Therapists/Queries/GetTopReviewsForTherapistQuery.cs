@@ -2,32 +2,23 @@
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Therapists.Queries
+namespace Ava.Application.Therapists.Queries;
+
+public record GetTopReviewsForTherapistQuery(Guid TherapistId) : IRequest<List<ReviewDto>>;
+
+public class GetTopReviewsForTherapistQueryHandler : IRequestHandler<GetTopReviewsForTherapistQuery, List<ReviewDto>>
 {
-    public class GetTopReviewsForTherapistQuery : IRequest<List<ReviewDto>>
+    private readonly ITherapistRepository _therapistRepository;
+
+    public GetTopReviewsForTherapistQueryHandler(ITherapistRepository therapistRepository)
     {
-        public Guid TherapistId { get; set; }
+        _therapistRepository = therapistRepository;
     }
 
-    public class GetTopReviewsForTherapistQueryHandler : IRequestHandler<GetTopReviewsForTherapistQuery, List<ReviewDto>>
+    public async Task<List<ReviewDto>> Handle(GetTopReviewsForTherapistQuery request, CancellationToken cancellationToken)
     {
-        private readonly ITherapistRepository _therapistRepository;
+        var reviews = await _therapistRepository.GetTopReviewsForTherapistAsync(request.TherapistId, 3);
 
-        public GetTopReviewsForTherapistQueryHandler(ITherapistRepository therapistRepository)
-        {
-            _therapistRepository = therapistRepository;
-        }
-
-        public async Task<List<ReviewDto>> Handle(GetTopReviewsForTherapistQuery request, CancellationToken cancellationToken)
-        {
-            var reviews = await _therapistRepository.GetTopReviewsForTherapistAsync(request.TherapistId, 3);
-            return reviews.Select(r => new ReviewDto
-            {
-                AuthorId = r.AuthorId,
-                RecipientId = r.RecipientId,
-                Rating = r.Rating,
-                Summary = r.Summary
-            }).ToList();
-        }
+        return reviews.Select(r => new ReviewDto(r.Id, r.AuthorId, r.RecipientId, r.Rating, r.Summary)).ToList();
     }
 }

@@ -12,11 +12,19 @@ public class Therapist : UserProfile
     {
     }
 
-    public Therapist(Guid userId, string userName, string email, string phone, string firstName, string lastName, string personalId, double rating, string summary, Guid certificateId)
-        : base(userId, userName, email, phone, firstName, lastName, personalId)
+    public Therapist(Guid userId, string firstName, string lastName, string personalId, double rating, string summary, Guid certificateId)
+        : base(userId, firstName, lastName, personalId)
     {
         Rating = rating;
         Summary = summary;
         CertificateId = certificateId;
+    }
+
+    public void Update(string firstName, string lastName, double rating, string summary)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Rating = rating;
+        Summary = summary;
     }
 }

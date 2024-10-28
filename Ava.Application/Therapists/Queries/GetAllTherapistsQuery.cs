@@ -2,38 +2,33 @@
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Therapists.Queries
+namespace Ava.Application.Therapists.Queries;
+
+public record GetAllTherapistsQuery : IRequest<IEnumerable<TherapistDto>>;
+
+public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuery, IEnumerable<TherapistDto>>
 {
-    public class GetAllTherapistsQuery : IRequest<IEnumerable<TherapistDto>> { }
+    private readonly ITherapistRepository _therapistRepository;
 
-    public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuery, IEnumerable<TherapistDto>>
+    public GetAllTherapistsQueryHandler(ITherapistRepository therapistRepository)
     {
-        private readonly ITherapistRepository _therapistRepository;
+        _therapistRepository = therapistRepository;
+    }
 
-        public GetAllTherapistsQueryHandler(ITherapistRepository therapistRepository)
-        {
-            _therapistRepository = therapistRepository;
-        }
+    public async Task<IEnumerable<TherapistDto>> Handle(GetAllTherapistsQuery request, CancellationToken cancellationToken)
+    {
+        var therapists = await _therapistRepository.GetAllAsync();
 
-        public async Task<IEnumerable<TherapistDto>> Handle(GetAllTherapistsQuery request, CancellationToken cancellationToken)
-        {
-            var therapists = await _therapistRepository.GetAllAsync();
-            var therapistDtos = therapists.Select(t => new TherapistDto
-            {
-                UserProfileId = t.UserProfileId,
-                Rating = t.Rating,
-                Summary = t.Summary,
-                CertificateId = t.CertificateId,
-                Reviews = t.Reviews.Select(r => new ReviewDto
-                {
-                    AuthorId = r.SenderId,
-                    RecipientId = r.RecipientId,
-                    Rating = r.ReviewValue,
-                    Summary = r.ReviewText
-                }).ToList()
-            });
+        var therapistDtos = therapists
+            .Select(t => new TherapistDto(
+                t.Id,
+                t.Rating,
+                t.Summary,
+                t.CertificateId,
+                t.RecipientReviews
+                    .Select(r => new ReviewDto(r.Id, r.AuthorId, r.RecipientId, r.Rating, r.Summary))
+                    .ToList()));
 
-            return therapistDtos;
-        }
+        return therapistDtos;
     }
 }

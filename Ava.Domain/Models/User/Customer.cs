@@ -6,8 +6,14 @@ public class Customer : UserProfile
     {
     }
 
-    public Customer(Guid userId, string userName, string email, string phone, string firstName, string lastName, string personalId) 
-        : base(userId, userName, email, phone, firstName, lastName, personalId) 
+    public Customer(Guid userId, string firstName, string lastName, string personalId) 
+        : base(userId, firstName, lastName, personalId) 
     {
+    }
+
+    public void Update(string firstName, string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
     }
 }

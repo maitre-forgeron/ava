@@ -1,31 +1,22 @@
 ﻿using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using MediatR;
 
-namespace Ava.Application.Customers.Commands
-{
-    public class DeleteCustomerCommand : IRequest<Unit>
-    {
-        public Guid Id { get; set; }
+namespace Ava.Application.Customers.Commands;
 
-        public DeleteCustomerCommand(Guid id)
-        {
-            Id = id;
-        }
+public record DeleteCustomerCommand(Guid Id) : IRequest<Unit>;
+
+public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Unit>
+{
+    private readonly ICustomerRepository _customerRepository;
+
+    public DeleteCustomerCommandHandler(ICustomerRepository customerRepository)
+    {
+        _customerRepository = customerRepository;
     }
 
-    public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Unit>
+    public async Task<Unit> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
     {
-        private readonly ICustomerRepository _customerRepository;
-
-        public DeleteCustomerCommandHandler(ICustomerRepository customerRepository)
-        {
-            _customerRepository = customerRepository;
-        }
-
-        public async Task<Unit> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
-        {
-            await _customerRepository.DeleteCustomerAsync(request.Id);
-            return Unit.Value;
-        }
+        await _customerRepository.DeleteCustomerAsync(request.Id);
+        return Unit.Value;
     }
 }

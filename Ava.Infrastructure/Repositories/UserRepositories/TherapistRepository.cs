@@ -18,12 +18,6 @@ namespace Ava.Infrastructure.Repositories.UserRepositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateTherapistAsync(Therapist therapist)
-        {
-            _context.Entry(therapist).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
         public async Task DeleteTherapistAsync(Guid id)
         {
             var therapist = await GetTherapistByIdAsync(id);

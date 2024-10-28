@@ -3,64 +3,26 @@ using Ava.Domain.Interfaces.Repositories.UserRepositories;
 using Ava.Domain.Models.User;
 using MediatR;
 
-namespace Ava.Application.Therapists.Commands
-{
-    public class AddTherapistCommand : IRequest<TherapistDto>
-    {
-        public TherapistDto TherapistDto { get; set; }
+namespace Ava.Application.Therapists.Commands;
 
-        public AddTherapistCommand(TherapistDto therapistDto)
-        {
-            TherapistDto = therapistDto;
-        }
+public record AddTherapistCommand(CreateTherapistDto Dto) : IRequest<Guid>;
+
+public class AddTherapistCommandHandler : IRequestHandler<AddTherapistCommand, Guid>
+{
+    private readonly ITherapistRepository _therapistRepository;
+
+    public AddTherapistCommandHandler(ITherapistRepository therapistRepository)
+    {
+        _therapistRepository = therapistRepository;
     }
 
-    public class AddTherapistCommandHandler : IRequestHandler<AddTherapistCommand, TherapistDto>
+    public async Task<Guid> Handle(AddTherapistCommand request, CancellationToken cancellationToken)
     {
-        private readonly ITherapistRepository _therapistRepository;
+        //TODO certificate id
+        var therapist = new Therapist(request.Dto.Id, request.Dto.FirstName, request.Dto.LastName, request.Dto.PersonalId, request.Dto.Rating, request.Dto.Summary, Guid.NewGuid());
 
-        public AddTherapistCommandHandler(ITherapistRepository therapistRepository)
-        {
-            _therapistRepository = therapistRepository;
-        }
+        await _therapistRepository.AddTherapistAsync(therapist);
 
-        public async Task<TherapistDto> Handle(AddTherapistCommand request, CancellationToken cancellationToken)
-        {
-            var therapist = new Therapist(
-                userProfileId: request.TherapistDto.UserProfileId,
-                rating: request.TherapistDto.Rating,
-                summary: request.TherapistDto.Summary,
-                certificateId: request.TherapistDto.CertificateId
-            );
-
-            if (request.TherapistDto.Reviews != null && request.TherapistDto.Reviews.Any())
-            {
-                foreach (var reviewDto in request.TherapistDto.Reviews)
-                {
-                    var review = new Review
-                    {
-                        AuthorId = reviewDto.AuthorId,
-                        RecipientId = reviewDto.RecipientId,
-                        Rating = reviewDto.Rating,
-                        Summary = reviewDto.Summary,
-                        Author = null,
-                        Recipient = null
-                    };
-                    therapist.Reviews.Add(review);
-                }
-            }
-
-            await _therapistRepository.AddTherapistAsync(therapist);
-
-            return new TherapistDto
-            {
-                UserProfileId = therapist.UserProfileId,
-                Rating = therapist.Rating,
-                Summary = therapist.Summary,
-                CertificateId = therapist.CertificateId,
-                Id = therapist.Id,
-                Reviews = request.TherapistDto.Reviews
-            };
-        }
+        return therapist.Id;
     }
 }

@@ -1,38 +1,36 @@
 ﻿using Ava.Application.Dtos;
+using Ava.Domain.Interfaces.Repositories;
 using Ava.Domain.Interfaces.Repositories.UserRepositories;
-using Ava.Domain.Models.User;
 using MediatR;
 
-namespace Ava.Application.Customers.Commands
-{
-    public class UpdateCustomerCommand : IRequest<Unit>
-    {
-        public CustomerDto CustomerDto { get; set; }
+namespace Ava.Application.Customers.Commands;
 
-        public UpdateCustomerCommand(CustomerDto customerDto)
-        {
-            CustomerDto = customerDto;
-        }
+public record UpdateCustomerCommand(UpdateCustomerDto Dto) : IRequest<Unit>;
+
+public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
+{
+    private readonly IUnitOfWork _uow;
+    private readonly ICustomerRepository _customerRepository;
+
+    public UpdateCustomerCommandHandler(IUnitOfWork uow, ICustomerRepository customerRepository)
+    {
+        _uow = uow;
+        _customerRepository = customerRepository;
     }
 
-    public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
+    public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
-        private readonly ICustomerRepository _customerRepository;
+        var customer = await _customerRepository.GetByIdAsync(request.Dto.Id);
 
-        public UpdateCustomerCommandHandler(ICustomerRepository customerRepository)
+        if (customer == null)
         {
-            _customerRepository = customerRepository;
+            throw new InvalidOperationException();    
         }
 
-        public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
-        {
-            var customer = new Customer
-            {
-                UserProfileId = request.CustomerDto.UserProfileId
-            };
+        customer.Update(request.Dto.FirstName, request.Dto.LastName);
 
-            await _customerRepository.UpdateCustomerAsync(customer);
-            return Unit.Value;
-        }
+        await _uow.CommitAsync();
+
+        return Unit.Value;
     }
 }

@@ -94,7 +94,7 @@ namespace Ava.Api.Controllers
         {
             var claims = new List<Claim>
             {
-                new Claim(CustomClaimType.Subject, newUser.Id),
+                new Claim(CustomClaimType.Subject, newUser.Id.ToString()),
                 new Claim(CustomClaimType.Name, newUser.UserName ?? string.Empty),
                 new Claim(CustomClaimType.Email, newUser.Email ?? string.Empty),
                 //new Claim(CustomClaimType.Role, newUser)
