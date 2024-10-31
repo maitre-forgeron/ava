@@ -1,5 +1,6 @@
-﻿using Ava.Domain.Interfaces.Repositories.UserRepositories;
+﻿using Ava.Infrastructure.Db;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Therapists.Commands;
 
@@ -7,15 +8,15 @@ public record DeleteTherapistCommand(Guid Id) : IRequest;
 
 public class DeleteTherapistCommandHandler : IRequestHandler<DeleteTherapistCommand>
 {
-    private readonly ITherapistRepository _therapistRepository;
+    private readonly AvaDbContext _context;
 
-    public DeleteTherapistCommandHandler(ITherapistRepository therapistRepository)
+    public DeleteTherapistCommandHandler(AvaDbContext context)
     {
-        _therapistRepository = therapistRepository;
+        _context = context;
     }
 
     public async Task Handle(DeleteTherapistCommand request, CancellationToken cancellationToken)
     {
-        await _therapistRepository.DeleteTherapistAsync(request.Id);
+        var result = await _context.Therapists.Where(t => t.Id == request.Id).ExecuteDeleteAsync(cancellationToken);
     }
 }

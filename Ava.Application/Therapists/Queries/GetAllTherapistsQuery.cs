@@ -1,6 +1,7 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
+using Ava.Infrastructure.Db;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Therapists.Queries;
 
@@ -8,18 +9,18 @@ public record GetAllTherapistsQuery : IRequest<IEnumerable<TherapistDto>>;
 
 public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuery, IEnumerable<TherapistDto>>
 {
-    private readonly ITherapistRepository _therapistRepository;
+    private readonly AvaDbContext _context;
 
-    public GetAllTherapistsQueryHandler(ITherapistRepository therapistRepository)
+    public GetAllTherapistsQueryHandler(AvaDbContext context)
     {
-        _therapistRepository = therapistRepository;
+        _context = context;
     }
 
     public async Task<IEnumerable<TherapistDto>> Handle(GetAllTherapistsQuery request, CancellationToken cancellationToken)
     {
-        var therapists = await _therapistRepository.GetAllAsync();
+        //TODO paging needs to be done
 
-        var therapistDtos = therapists
+        var therapistDtos = _context.Therapists
             .Select(t => new TherapistDto(
                 t.Id,
                 t.Rating,
@@ -27,7 +28,8 @@ public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuer
                 t.CertificateId,
                 t.RecipientReviews
                     .Select(r => new ReviewDto(r.Id, r.AuthorId, r.RecipientId, r.Rating, r.Summary))
-                    .ToList()));
+                    .ToList()))
+            .AsNoTracking();
 
         return therapistDtos;
     }

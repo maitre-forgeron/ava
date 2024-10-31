@@ -1,7 +1,7 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Domain.Interfaces.Repositories;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
+using Ava.Infrastructure.Db;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Customers.Commands;
 
@@ -9,18 +9,16 @@ public record UpdateCustomerCommand(UpdateCustomerDto Dto) : IRequest<Unit>;
 
 public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
 {
-    private readonly IUnitOfWork _uow;
-    private readonly ICustomerRepository _customerRepository;
+    private readonly AvaDbContext _context;
 
-    public UpdateCustomerCommandHandler(IUnitOfWork uow, ICustomerRepository customerRepository)
+    public UpdateCustomerCommandHandler(AvaDbContext context)
     {
-        _uow = uow;
-        _customerRepository = customerRepository;
+        _context = context;
     }
 
     public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository.GetByIdAsync(request.Dto.Id);
+        var customer = await _context.Customers.SingleOrDefaultAsync(c => c.Id == request.Dto.Id, cancellationToken);
 
         if (customer == null)
         {
@@ -28,8 +26,7 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
         }
 
         customer.Update(request.Dto.FirstName, request.Dto.LastName);
-
-        await _uow.CommitAsync();
+        await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }
