@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Ava.Infrastructure.Models
+namespace Ava.Infrastructure.Models;
+
+public class User : IdentityUser<Guid>
 {
-    public class User : IdentityUser
-    {
-    }
 }

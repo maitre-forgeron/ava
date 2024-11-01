@@ -1,31 +1,27 @@
-﻿using Ava.Domain.Interfaces.Repositories.UserRepositories;
-using Ava.Domain.Models.User;
+﻿using Ava.Application.Dtos;
+using Ava.Infrastructure.Db;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Ava.Application.Customers.Queries
+namespace Ava.Application.Customers.Queries;
+
+public record GetCustomerProfileQuery(Guid Id) : IRequest<CustomerDto>;
+
+public class GetCustomerProfileQueryHandler : IRequestHandler<GetCustomerProfileQuery, CustomerDto?>
 {
-    public class GetCustomerProfileQuery : IRequest<Customer>
-    {
-        public Guid Id { get; set; }
+    private readonly AvaDbContext _context;
 
-        public GetCustomerProfileQuery(Guid id)
-        {
-            Id = id;
-        }
+    public GetCustomerProfileQueryHandler(AvaDbContext context)
+    {
+        _context = context;
     }
 
-    public class GetCustomerProfileQueryHandler : IRequestHandler<GetCustomerProfileQuery, Customer>
+    public async Task<CustomerDto?> Handle(GetCustomerProfileQuery request, CancellationToken cancellationToken)
     {
-        private readonly ICustomerRepository _customerRepository;
-
-        public GetCustomerProfileQueryHandler(ICustomerRepository customerRepository)
-        {
-            _customerRepository = customerRepository;
-        }
-
-        public async Task<Customer> Handle(GetCustomerProfileQuery request, CancellationToken cancellationToken)
-        {
-            return await _customerRepository.GetCustomerByIdAsync(request.Id);
-        }
+        return await _context.Customers
+            .Where(c => c.Id == request.Id)
+            .Select(c => new CustomerDto(c.Id, c.FirstName, c.LastName, c.PersonalId, c.PhotoId))
+            .AsNoTracking()
+            .SingleOrDefaultAsync(cancellationToken);
     }
 }

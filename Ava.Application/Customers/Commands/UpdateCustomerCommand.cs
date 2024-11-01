@@ -1,38 +1,33 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
-using Ava.Domain.Models.User;
+using Ava.Infrastructure.Db;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Ava.Application.Customers.Commands
+namespace Ava.Application.Customers.Commands;
+
+public record UpdateCustomerCommand(UpdateCustomerDto Dto) : IRequest<Unit>;
+
+public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
 {
-    public class UpdateCustomerCommand : IRequest<Unit>
-    {
-        public CustomerDto CustomerDto { get; set; }
+    private readonly AvaDbContext _context;
 
-        public UpdateCustomerCommand(CustomerDto customerDto)
-        {
-            CustomerDto = customerDto;
-        }
+    public UpdateCustomerCommandHandler(AvaDbContext context)
+    {
+        _context = context;
     }
 
-    public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
+    public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
-        private readonly ICustomerRepository _customerRepository;
+        var customer = await _context.Customers.SingleOrDefaultAsync(c => c.Id == request.Dto.Id, cancellationToken);
 
-        public UpdateCustomerCommandHandler(ICustomerRepository customerRepository)
+        if (customer == null)
         {
-            _customerRepository = customerRepository;
+            throw new InvalidOperationException();    
         }
 
-        public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
-        {
-            var customer = new Customer
-            {
-                UserProfileId = request.CustomerDto.UserProfileId
-            };
+        customer.Update(request.Dto.FirstName, request.Dto.LastName);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            await _customerRepository.UpdateCustomerAsync(customer);
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

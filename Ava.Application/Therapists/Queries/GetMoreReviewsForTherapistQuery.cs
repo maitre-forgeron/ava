@@ -1,35 +1,32 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
+using Ava.Infrastructure.Db;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Ava.Application.Therapists.Queries
+namespace Ava.Application.Therapists.Queries;
+
+public record GetMoreReviewsForTherapistQuery(Guid TherapistId, int Skip, int Take) : IRequest<List<ReviewDto>>;
+
+public class GetMoreReviewsForTherapistQueryHandler : IRequestHandler<GetMoreReviewsForTherapistQuery, List<ReviewDto>>
 {
-    public class GetMoreReviewsForTherapistQuery : IRequest<List<ReviewDto>>
+    private readonly AvaDbContext _context;
+
+    public GetMoreReviewsForTherapistQueryHandler(AvaDbContext context)
     {
-        public Guid TherapistId { get; set; }
-        public int Skip { get; set; }
-        public int Take { get; set; }
+        _context = context;
     }
 
-    public class GetMoreReviewsForTherapistQueryHandler : IRequestHandler<GetMoreReviewsForTherapistQuery, List<ReviewDto>>
+    public async Task<List<ReviewDto>> Handle(GetMoreReviewsForTherapistQuery request, CancellationToken cancellationToken)
     {
-        private readonly ITherapistRepository _therapistRepository;
+        var reviews = await _context.Therapists
+            .Where(t => t.Id == request.TherapistId)
+            .SelectMany(t => t.RecipientReviews)
+            .Skip(request.Skip)
+            .Take(request.Take)
+            .Select(r => new ReviewDto(r.Id, r.AuthorId, r.RecipientId, r.Rating, r.Summary))
+            .AsNoTracking()
+            .ToListAsync();
 
-        public GetMoreReviewsForTherapistQueryHandler(ITherapistRepository therapistRepository)
-        {
-            _therapistRepository = therapistRepository;
-        }
-
-        public async Task<List<ReviewDto>> Handle(GetMoreReviewsForTherapistQuery request, CancellationToken cancellationToken)
-        {
-            var reviews = await _therapistRepository.GetReviewsForTherapistAsync(request.TherapistId, request.Skip, request.Take);
-            return reviews.Select(r => new ReviewDto
-            {
-                SenderId = r.SenderId,
-                RecipientId = r.RecipientId,
-                ReviewValue = r.ReviewValue,
-                ReviewText = r.ReviewText
-            }).ToList();
-        }
+        return reviews;
     }
 }

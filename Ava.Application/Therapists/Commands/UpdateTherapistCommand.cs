@@ -1,38 +1,32 @@
 ﻿using Ava.Application.Dtos;
-using Ava.Domain.Interfaces.Repositories.UserRepositories;
-using Ava.Domain.Models.User;
+using Ava.Infrastructure.Db;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Ava.Application.Therapists.Commands
+namespace Ava.Application.Therapists.Commands;
+
+public record UpdateTherapistCommand(UpdateTherapistDto Dto) : IRequest;
+
+public class UpdateTherapistCommandHandler : IRequestHandler<UpdateTherapistCommand>
 {
-    public class UpdateTherapistCommand : IRequest
+    private readonly AvaDbContext _context;
+
+    public UpdateTherapistCommandHandler(AvaDbContext context)
     {
-        public TherapistDto Therapist { get; set; }
+        _context = context;
     }
 
-    public class UpdateTherapistCommandHandler : IRequestHandler<UpdateTherapistCommand>
+    public async Task Handle(UpdateTherapistCommand request, CancellationToken cancellationToken)
     {
-        private readonly ITherapistRepository _therapistRepository;
+        var therapist = await _context.Therapists.SingleOrDefaultAsync(t => t.Id == request.Dto.Id, cancellationToken);
 
-        public UpdateTherapistCommandHandler(ITherapistRepository therapistRepository)
+        if (therapist == null)
         {
-            _therapistRepository = therapistRepository;
+            throw new InvalidOperationException();
         }
 
-        public async Task Handle(UpdateTherapistCommand request, CancellationToken cancellationToken)
-        {
-            var therapist = new Therapist(request.Therapist.UserProfileId, request.Therapist.Rating, request.Therapist.Summary, request.Therapist.CertificateId)
-            {
-                Reviews = request.Therapist.Reviews.Select(r => new Review
-                {
-                    SenderId = r.SenderId,
-                    RecipientId = r.RecipientId,
-                    ReviewValue = r.ReviewValue,
-                    ReviewText = r.ReviewText
-                }).ToList()
-            };
+        therapist.Update(request.Dto.FirstName, request.Dto.LastName, request.Dto.Rating, request.Dto.Summary);
 
-            await _therapistRepository.UpdateTherapistAsync(therapist);
-        }
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }
