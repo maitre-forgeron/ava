@@ -1,4 +1,5 @@
-﻿using Ava.Infrastructure.Services.PictureService;
+﻿using Ava.Infrastructure.Services.Identity;
+using Ava.Infrastructure.Services.Pictures;
 
 namespace Ava.Infrastructure;
 
@@ -18,6 +19,8 @@ public static class Configuration
         services.AddScoped<AvaDbContextInitialiser>();
 
         services.AddSingleton<IPictureService, PictureService>();
+
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
