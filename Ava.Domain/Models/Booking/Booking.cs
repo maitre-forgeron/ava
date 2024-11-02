@@ -1,4 +1,6 @@
-﻿namespace Ava.Domain.Models.Booking
+﻿using Ava.Domain.Models.Common;
+
+namespace Ava.Domain.Models.Booking
 {
     public class Booking : AggregateRoot
     {
@@ -35,12 +37,14 @@
             StatusChangeTime = DateTime.UtcNow;
         }
 
-        private void EnsureTherapistAuthorization(Guid therapistId)
+        private Result EnsureTherapistAuthorization(Guid therapistId)
         {
             if (therapistId != TherapistId)
             {
-                throw new UnauthorizedAccessException("Only the assigned therapist can approve or reject this booking");
+                return Result.Failure(BookingErrors.Unauthorized);
             }
+
+            return Result.Success();
         }
     }
 

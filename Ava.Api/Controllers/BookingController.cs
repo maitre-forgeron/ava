@@ -33,27 +33,49 @@ namespace Ava.Api.Controllers
         {
             var result = await _mediator.Send(new AddBookingCommand(booking));
 
-            return CreatedAtAction(nameof(GetBooking), new { id = result.Id }, result);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> ApproveBooking([FromBody] BookingActionDto action)
         {
-            await _mediator.Send(new ApproveBookingCommand(action));
+            var result = await _mediator.Send(new ApproveBookingCommand(action));
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
             return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> RejectBooking([FromBody] BookingActionDto action)
         {
-            await _mediator.Send(new RejectBookingCommand(action));
+            var result = await _mediator.Send(new RejectBookingCommand(action));
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(Guid id)
         {
-            await _mediator.Send(new DeleteBookingCommand(id));
+            var result = await _mediator.Send(new DeleteBookingCommand(id));
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
 
             return NoContent();
         }

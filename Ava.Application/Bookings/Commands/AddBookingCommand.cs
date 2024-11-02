@@ -1,14 +1,15 @@
 ﻿using Ava.Application.Dtos;
 using Ava.Domain.Models.Booking;
+using Ava.Domain.Models.Common;
 using Ava.Infrastructure.Db;
 
 using MediatR;
 
 namespace Ava.Application.Bookings.Commands;
 
-public record AddBookingCommand(CreateBookingDto Dto) : IRequest<Booking>;
+public record AddBookingCommand(CreateBookingDto Dto) : IRequest<Result>;
 
-public class AddBookingCommandHandler : IRequestHandler<AddBookingCommand, Booking>
+public class AddBookingCommandHandler : IRequestHandler<AddBookingCommand, Result>
 {
     private readonly AvaDbContext _context;
 
@@ -17,13 +18,13 @@ public class AddBookingCommandHandler : IRequestHandler<AddBookingCommand, Booki
         _context = context;
     }
 
-    public async Task<Booking> Handle(AddBookingCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AddBookingCommand request, CancellationToken cancellationToken)
     {
-        var booking = new Booking(request.Dto.Id, request.Dto.ConsumerId, request.Dto.TherapistId, request.Dto.PreferredTime, request.Dto.Duration);
+        var booking = new Booking(Guid.NewGuid(), request.Dto.ConsumerId, request.Dto.TherapistId, request.Dto.PreferredTime, request.Dto.Duration);
 
         _context.Add(booking);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return booking;
+        return Result.Success();
     }
 }
