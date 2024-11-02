@@ -37,7 +37,7 @@ namespace Ava.Domain.Models.Booking
             StatusChangeTime = DateTime.UtcNow;
         }
 
-        private Result EnsureTherapistAuthorization(Guid therapistId)
+        public Result EnsureTherapistAuthorization(Guid therapistId)
         {
             if (therapistId != TherapistId)
             {

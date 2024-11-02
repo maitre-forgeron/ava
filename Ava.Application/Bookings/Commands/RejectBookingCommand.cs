@@ -28,9 +28,16 @@ public class RejectBookingCommandHandler : IRequestHandler<RejectBookingCommand,
             return Result.Failure(BookingErrors.NotFound);
         }
 
-        booking.Reject(request.Dto.TherapistId);
-        await _context.SaveChangesAsync(cancellationToken);
+        var authorizationResult = booking.EnsureTherapistAuthorization(request.Dto.TherapistId);
 
+        if(!authorizationResult.IsSuccess)
+        {
+            return authorizationResult;
+        }
+
+        booking.Reject(request.Dto.TherapistId);
+
+        await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
 }

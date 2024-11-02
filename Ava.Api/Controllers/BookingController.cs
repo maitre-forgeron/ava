@@ -29,7 +29,7 @@ namespace Ava.Api.Controllers
             return Ok(bookingDto);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> AddBooking([FromBody] CreateBookingDto booking)
         {
             var result = await _mediator.Send(new AddBookingCommand(booking));
@@ -42,7 +42,7 @@ namespace Ava.Api.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("approve")]
         public async Task<IActionResult> ApproveBooking([FromBody] BookingActionDto action)
         {
             var result = await _mediator.Send(new ApproveBookingCommand(action));
@@ -55,7 +55,7 @@ namespace Ava.Api.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("reject")]
         public async Task<IActionResult> RejectBooking([FromBody] BookingActionDto action)
         {
             var result = await _mediator.Send(new RejectBookingCommand(action));

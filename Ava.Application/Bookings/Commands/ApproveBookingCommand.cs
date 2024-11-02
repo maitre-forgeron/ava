@@ -28,6 +28,13 @@ public class ApproveBookingCommandHandler : IRequestHandler<ApproveBookingComman
             return Result.Failure(BookingErrors.NotFound);
         }
 
+        var authorizationResult = booking.EnsureTherapistAuthorization(request.Dto.TherapistId);
+
+        if (!authorizationResult.IsSuccess)
+        {
+            return authorizationResult;
+        }
+
         booking.Approve(request.Dto.TherapistId);
         await _context.SaveChangesAsync(cancellationToken);
 
