@@ -36,7 +36,7 @@ public class GetBookingQueryHandler : IRequestHandler<GetBookingQuery, BookingDt
 
         if (booking == null)
         {
-            throw new InvalidOperationException("Booking not found.");
+            throw new InvalidOperationException("Booking was not found!");
         }
 
         return booking;

@@ -23,6 +23,7 @@ namespace Ava.Api.Controllers
         public async Task<IActionResult> GetBooking(Guid id)
         {
             var bookingDto = await _mediator.Send(new GetBookingQuery(id));
+
             if (bookingDto == null) return NotFound();
 
             return Ok(bookingDto);
