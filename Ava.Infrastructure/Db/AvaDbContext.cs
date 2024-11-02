@@ -1,4 +1,5 @@
-﻿using Ava.Domain.Models.Category;
+﻿using Ava.Domain.Models.Booking;
+using Ava.Domain.Models.Category;
 using Ava.Domain.Models.User;
 using Ava.Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +21,8 @@ public class AvaDbContext :
     public DbSet<UserProfile> UserProfiles { get; set; }
 
     public DbSet<User> Users { get; set; }
+
+    public DbSet<Booking> Bookings { get; set; }
 
     public AvaDbContext(DbContextOptions<AvaDbContext> options) : base(options)
     {
