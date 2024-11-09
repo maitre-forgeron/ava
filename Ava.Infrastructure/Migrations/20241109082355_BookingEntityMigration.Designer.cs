@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ava.Infrastructure.Migrations
 {
     [DbContext(typeof(AvaDbContext))]
-    [Migration("20241102140958_BookingMigration")]
-    partial class BookingMigration
+    [Migration("20241109082355_BookingEntityMigration")]
+    partial class BookingEntityMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,8 +37,8 @@ namespace Ava.Infrastructure.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("time");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PreferredTime")
                         .HasColumnType("datetime2");

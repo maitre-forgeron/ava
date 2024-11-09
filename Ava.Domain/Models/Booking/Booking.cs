@@ -1,13 +1,11 @@
-﻿using Ava.Domain.Models.Common;
-
-namespace Ava.Domain.Models.Booking
+﻿namespace Ava.Domain.Models.Booking
 {
     public class Booking : AggregateRoot
     {
         public Guid ConsumerId { get; private set; }
         public Guid TherapistId { get; private set; }
         public DateTime PreferredTime { get; private set; }
-        public TimeSpan Duration { get; private set; }
+        public int Duration { get; private set; }
         public BookingStatus Status { get; private set; }
         public DateTime? StatusChangeTime { get; private set; }
 
@@ -16,7 +14,7 @@ namespace Ava.Domain.Models.Booking
 
         }
 
-        public Booking(Guid id, Guid consumerId, Guid therapistId, DateTime preferredTime, TimeSpan duration) : base(id)
+        public Booking(Guid id, Guid consumerId, Guid therapistId, DateTime preferredTime, int duration) : base(id)
         {
             ConsumerId = consumerId;
             TherapistId = therapistId;
@@ -25,26 +23,16 @@ namespace Ava.Domain.Models.Booking
             Status = BookingStatus.InProgress;
         }
 
-        public void Approve(Guid therapistId)
+        public void Approve()
         {
             Status = BookingStatus.Accepted;
             StatusChangeTime = DateTime.UtcNow;
         }
 
-        public void Reject(Guid therapistId)
+        public void Reject()
         {
             Status = BookingStatus.Rejected;
             StatusChangeTime = DateTime.UtcNow;
-        }
-
-        public Result EnsureTherapistAuthorization(Guid therapistId)
-        {
-            if (therapistId != TherapistId)
-            {
-                return Result.Failure(BookingErrors.Unauthorized);
-            }
-
-            return Result.Success();
         }
     }
 

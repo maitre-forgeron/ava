@@ -1,6 +1,5 @@
-﻿using Ava.Application.Dtos;
-using Ava.Domain.Models.Booking;
-using Ava.Domain.Models.Common;
+﻿using Ava.Application.Constants;
+using Ava.Application.Models;
 using Ava.Infrastructure.Db;
 
 using MediatR;
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Bookings.Commands;
 
-public record ApproveBookingCommand(BookingActionDto Dto) : IRequest<Result>;
+public record ApproveBookingCommand(Guid bookingId) : IRequest<Result>;
 
 public class ApproveBookingCommandHandler : IRequestHandler<ApproveBookingCommand, Result>
 {
@@ -21,21 +20,31 @@ public class ApproveBookingCommandHandler : IRequestHandler<ApproveBookingComman
 
     public async Task<Result> Handle(ApproveBookingCommand request, CancellationToken cancellationToken)
     {
-        var booking = await _context.Bookings.Where(b => b.Id == request.Dto.Id).SingleOrDefaultAsync(cancellationToken);
+        var booking = await _context.Bookings.Where(b => b.Id == request.bookingId).SingleOrDefaultAsync(cancellationToken);
 
         if (booking == null)
         {
             return Result.Failure(BookingErrors.NotFound);
         }
 
-        var authorizationResult = booking.EnsureTherapistAuthorization(request.Dto.TherapistId);
+        var therapistEntity = await _context.Therapists.Where(t => t.Id == booking.TherapistId).SingleOrDefaultAsync(cancellationToken);
 
-        if (!authorizationResult.IsSuccess)
+        if (therapistEntity == null)
         {
-            return authorizationResult;
+            return Result.Failure(TherapistErrors.NotFound);
         }
 
-        booking.Approve(request.Dto.TherapistId);
+        var hasTherapistRole = await _context.UserRoles
+            .Where(r => r.UserId == therapistEntity.Id)
+            .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r.Name)
+            .AnyAsync(name => name == "therapist", cancellationToken);
+
+        if (!hasTherapistRole)
+        {
+            return Result.Failure(BookingErrors.Unauthorized);
+        }
+
+        booking.Approve();
         await _context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

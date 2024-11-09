@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Ava.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class BookingMigration : Migration
+    public partial class BookingEntityMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace Ava.Infrastructure.Migrations
                     ConsumerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TherapistId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PreferredTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StatusChangeTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),

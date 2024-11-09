@@ -34,8 +34,8 @@ namespace Ava.Infrastructure.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("time");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PreferredTime")
                         .HasColumnType("datetime2");

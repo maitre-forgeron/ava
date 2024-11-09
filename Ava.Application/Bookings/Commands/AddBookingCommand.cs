@@ -1,6 +1,6 @@
 ﻿using Ava.Application.Dtos;
+using Ava.Application.Models;
 using Ava.Domain.Models.Booking;
-using Ava.Domain.Models.Common;
 using Ava.Infrastructure.Db;
 
 using MediatR;
