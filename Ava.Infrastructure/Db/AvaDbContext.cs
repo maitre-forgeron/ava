@@ -22,7 +22,12 @@ public class AvaDbContext :
 
     public DbSet<User> Users { get; set; }
 
-    public DbSet<Booking> Bookings { get; set; }
+    public virtual DbSet<Booking> Bookings { get; set; }
+
+    public AvaDbContext()
+    {
+        
+    }
 
     public AvaDbContext(DbContextOptions<AvaDbContext> options) : base(options)
     {

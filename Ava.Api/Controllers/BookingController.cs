@@ -24,7 +24,10 @@ namespace Ava.Api.Controllers
         {
             var bookingDto = await _mediator.Send(new GetBookingQuery(id));
 
-            if (bookingDto == null) return NotFound();
+            if (bookingDto == null)
+            {
+                return NotFound();
+            }
 
             return Ok(bookingDto);
         }
@@ -33,11 +36,6 @@ namespace Ava.Api.Controllers
         public async Task<IActionResult> AddBooking([FromBody] CreateBookingDto booking)
         {
             var result = await _mediator.Send(new AddBookingCommand(booking));
-
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error);
-            }
 
             return Ok();
         }

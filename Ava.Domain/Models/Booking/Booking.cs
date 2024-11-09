@@ -16,6 +16,7 @@
 
         public Booking(Guid id, Guid consumerId, Guid therapistId, DateTime preferredTime, int duration) : base(id)
         {
+            Id = id;
             ConsumerId = consumerId;
             TherapistId = therapistId;
             PreferredTime = preferredTime;
