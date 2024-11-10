@@ -24,9 +24,11 @@ public class AvaDbContext :
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
+    public DbSet<TherapistCategory> TherapistCategories { get; set; }
+
     public AvaDbContext()
     {
-        
+
     }
 
     public AvaDbContext(DbContextOptions<AvaDbContext> options) : base(options)
