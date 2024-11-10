@@ -45,7 +45,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Review", b =>
@@ -79,34 +79,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasIndex("RecipientId");
 
-                    b.ToTable("Reviews");
-                });
-
-            modelBuilder.Entity("Ava.Domain.Models.User.TherapistCategory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("TherapistId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("TherapistId");
-
-                    b.ToTable("TherapistCategories");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.UserProfile", b =>
@@ -143,7 +116,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
 
                     b.HasDiscriminator().HasValue("UserProfile");
 
@@ -413,25 +386,6 @@ namespace Ava.Infrastructure.Migrations
                     b.Navigation("Recipient");
                 });
 
-            modelBuilder.Entity("Ava.Domain.Models.User.TherapistCategory", b =>
-                {
-                    b.HasOne("Ava.Domain.Models.Category.Category", "Category")
-                        .WithMany("TherapistCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Ava.Domain.Models.User.Therapist", "Therapist")
-                        .WithMany("Categories")
-                        .HasForeignKey("TherapistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Therapist");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -486,8 +440,6 @@ namespace Ava.Infrastructure.Migrations
             modelBuilder.Entity("Ava.Domain.Models.Category.Category", b =>
                 {
                     b.Navigation("SubCategories");
-
-                    b.Navigation("TherapistCategories");
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.UserProfile", b =>
@@ -495,11 +447,6 @@ namespace Ava.Infrastructure.Migrations
                     b.Navigation("AuthorReviews");
 
                     b.Navigation("RecipientReviews");
-                });
-
-            modelBuilder.Entity("Ava.Domain.Models.User.Therapist", b =>
-                {
-                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }
