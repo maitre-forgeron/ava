@@ -1,4 +1,6 @@
-﻿namespace Ava.Domain.Models.Category;
+﻿using Ava.Domain.Models.User;
+
+namespace Ava.Domain.Models.Category;
 
 public class Category : Entity
 {
@@ -6,6 +8,9 @@ public class Category : Entity
 
     private List<Category> _subCategories;
     public IReadOnlyCollection<Category> SubCategories => _subCategories?.AsReadOnly();
+
+    private List<TherapistCategory> _therapistCategories;
+    public IReadOnlyCollection<TherapistCategory> TherapistCategories => _therapistCategories.AsReadOnly();
 
     private Category()
     {
@@ -24,7 +29,7 @@ public class Category : Entity
             throw new ArgumentNullException(nameof(subCategory), "Subcategory cannot be null.");
         }
 
-        if(_subCategories is null)
+        if (_subCategories is null)
         {
             _subCategories = new List<Category>();
         }
@@ -33,7 +38,7 @@ public class Category : Entity
         {
             throw new InvalidOperationException("This subcategory is already added.");
         }
-            
+
         _subCategories.Add(subCategory);
     }
 }

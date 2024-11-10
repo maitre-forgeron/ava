@@ -18,9 +18,9 @@ public class TherapistController : ControllerBase
     }
 
     [HttpGet("alltherapists")]
-    public async Task<IActionResult> GetAllTherapists()
+    public async Task<IActionResult> GetAllTherapists(Guid? CategoryId, int skip, int take)
     {
-        var therapists = await _mediator.Send(new GetAllTherapistsQuery());
+        var therapists = await _mediator.Send(new GetAllTherapistsQuery(CategoryId, skip, take));
 
         if (therapists == null || !therapists.Any())
         {
@@ -82,7 +82,7 @@ public class TherapistController : ControllerBase
     [HttpGet("{id}/reviews/more")]
     public async Task<IActionResult> GetMoreReviews(Guid id, int skip, int take)
     {
-        var reviews = await _mediator.Send(new GetMoreReviewsForTherapistQuery(id, skip, take ));
+        var reviews = await _mediator.Send(new GetMoreReviewsForTherapistQuery(id, skip, take));
 
         return Ok(reviews);
     }

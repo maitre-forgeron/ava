@@ -21,6 +21,8 @@ public class AvaDbContext :
 
     public DbSet<User> Users { get; set; }
 
+    public DbSet<TherapistCategory> TherapistCategories { get; set; }
+
     public AvaDbContext(DbContextOptions<AvaDbContext> options) : base(options)
     {
 

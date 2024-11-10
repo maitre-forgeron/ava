@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Therapists.Queries;
 
-public record GetAllTherapistsQuery : IRequest<IEnumerable<TherapistDto>>;
+public record GetAllTherapistsQuery(Guid? CategoryId, int Skip, int Take) : IRequest<IEnumerable<TherapistDto>>;
 
 public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuery, IEnumerable<TherapistDto>>
 {
@@ -21,6 +21,8 @@ public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuer
         //TODO paging needs to be done
 
         var therapistDtos = _context.Therapists
+            .Skip(request.Skip)
+            .Take(request.Take)
             .Select(t => new TherapistDto(
                 t.Id,
                 t.Rating,
