@@ -27,7 +27,6 @@
     <ProjectReference Include="..\Ava.Infrastructure\Ava.Infrastructure.csproj" />
     <ProjectReference Include="..\Ava.Logging\Ava.Logging.csproj" />
     <ProjectReference Include="..\Ava.Shared\Ava.Shared.csproj" />
-    <ProjectReference Include="..\Ava.Tests.Unit\Ava.Tests.Unit.csproj" />
   </ItemGroup>
 
 </Project>

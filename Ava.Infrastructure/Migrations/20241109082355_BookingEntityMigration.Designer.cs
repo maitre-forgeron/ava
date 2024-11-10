@@ -4,6 +4,7 @@ using Ava.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ava.Infrastructure.Migrations
 {
     [DbContext(typeof(AvaDbContext))]
-    partial class AvaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241109082355_BookingEntityMigration")]
+    partial class BookingEntityMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.Review", b =>
@@ -115,7 +118,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasIndex("RecipientId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Ava.Domain.Models.User.UserProfile", b =>
@@ -152,7 +155,7 @@ namespace Ava.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserProfiles", (string)null);
+                    b.ToTable("UserProfiles");
 
                     b.HasDiscriminator().HasValue("UserProfile");
 
