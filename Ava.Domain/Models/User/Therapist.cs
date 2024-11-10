@@ -8,8 +8,8 @@ public class Therapist : UserProfile
 
     public Guid CertificateId { get; private set; }
 
-    private List<TherapistCategory> _categories;
-    public IReadOnlyCollection<TherapistCategory> Categories => _categories?.AsReadOnly();
+    private List<TherapistCategory> _therapistCategories;
+    public IReadOnlyCollection<TherapistCategory> TherapistCategories => _therapistCategories?.AsReadOnly();
 
     private Therapist()
     {
@@ -33,6 +33,6 @@ public class Therapist : UserProfile
 
     public void AddTherapistIntoCategory(Guid categoryId)
     {
-        _categories.Add(new TherapistCategory(this.Id, categoryId));
+        _therapistCategories.Add(new TherapistCategory(this.Id, categoryId));
     }
 }
