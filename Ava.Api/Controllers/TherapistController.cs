@@ -1,4 +1,5 @@
 ﻿using Ava.Application.Dtos;
+using Ava.Application.Models;
 using Ava.Application.Reviews.Commands;
 using Ava.Application.Reviews.Queries;
 using Ava.Application.Therapists.Commands;
@@ -68,7 +69,12 @@ public class TherapistController : ControllerBase
             return BadRequest();
         }
 
-        await _mediator.Send(new UpdateTherapistCommand(therapistDto));
+        var result = await _mediator.Send(new UpdateTherapistCommand(therapistDto));
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
 
         return NoContent();
     }
@@ -108,6 +114,11 @@ public class TherapistController : ControllerBase
 
         var command = new AddReviewCommand(reviewDto.AuthorId, reviewDto.RecipientId, reviewDto.Rating, reviewDto.Summary);
         var reviewId = await _mediator.Send(command);
+
+        if (reviewId == null || reviewId.IsFailure)
+        {
+            return BadRequest();
+        }
 
         return CreatedAtAction(nameof(GetTherapistProfile), new { id = reviewId }, reviewId);
     }

@@ -1,6 +1,7 @@
 ﻿using Ava.Application.Customers.Commands;
 using Ava.Application.Customers.Queries;
 using Ava.Application.Dtos;
+using Ava.Application.Models;
 using Ava.Application.Reviews.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet("allcustomers")]
-    public async Task<IActionResult> GetAllTherapists()
+    public async Task<IActionResult> GetAllCustomers()
     {
         var customers = await _mediator.Send(new GetAllCustomersQuery());
 
@@ -47,11 +48,16 @@ public class CustomerController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddCustomer([FromBody] CreateCustomerDto customer)
     {
-        var result = await _mediator.Send(new AddCustomerCommand(customer));
-
         if (customer == null)
         {
-            return NotFound();
+            return BadRequest(new Error("400", "Invalid customer data"));
+        }
+
+        var result = await _mediator.Send(new AddCustomerCommand(customer));
+
+        if (result.IsFailure)
+        {
+            return BadRequest(new Error("400", result.Error.Description));
         }
 
         return Ok();
