@@ -1,22 +1,23 @@
-﻿using Ava.Domain.Models.User;
+﻿using Ava.Application.Models;
+using Ava.Domain.Models.User;
 using Ava.Infrastructure.Db;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Reviews.Commands;
 
-public record AddReviewCommand(Guid AuthorId, Guid RecipientId, int Rating, string Summary) : IRequest<Guid>;
+public record AddReviewCommand(Guid AuthorId, Guid RecipientId, int Rating, string Summary) : IRequest<Result>;
 
-public class AddReviewCommandHandler(AvaDbContext context) : IRequestHandler<AddReviewCommand, Guid>
+public class AddReviewCommandHandler(AvaDbContext context) : IRequestHandler<AddReviewCommand, Result>
 {
     private readonly AvaDbContext _context = context;
 
-    public async Task<Guid> Handle(AddReviewCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AddReviewCommand request, CancellationToken cancellationToken)
     {
         var author = await _context.Therapists.FindAsync([request.AuthorId], cancellationToken);
         if (author != null && request.AuthorId == request.RecipientId)
         {
-            throw new InvalidOperationException("A therapist cannot rate themselves.");
+            return Result.Failure(new Error("400", "A therapist cannot rate themselves."));
         }
 
         var existingReview = await _context.Reviews
@@ -25,7 +26,7 @@ public class AddReviewCommandHandler(AvaDbContext context) : IRequestHandler<Add
 
         if (existingReview != null)
         {
-            throw new InvalidOperationException("The user has already rated this therapist.");
+            return Result.Failure(new Error("400", "The user has already rated this therapist."));
         }
 
         var review = new Review(Guid.NewGuid(), request.AuthorId, request.RecipientId, request.Rating, request.Summary);
@@ -34,7 +35,7 @@ public class AddReviewCommandHandler(AvaDbContext context) : IRequestHandler<Add
         var therapist = await _context.Therapists.FindAsync([request.RecipientId], cancellationToken);
         if (therapist == null)
         {
-            throw new KeyNotFoundException("Therapist not found.");
+            return Result.Failure(new Error("400", "Therapist not found."));
         }
 
         var reviews = await _context.Reviews
@@ -46,6 +47,6 @@ public class AddReviewCommandHandler(AvaDbContext context) : IRequestHandler<Add
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return review.Id;
+        return Result.Success();
     }
 }
