@@ -21,11 +21,10 @@ public class GetMoreReviewsForTherapistQueryHandler : IRequestHandler<GetMoreRev
         var reviews = await _context.Therapists
             .Where(t => t.Id == request.TherapistId)
             .SelectMany(t => t.RecipientReviews)
-            .Skip(request.Skip)
-            .Take(request.Take)
+            .Where(r => r.RecipientId == request.TherapistId)
             .Select(r => new ReviewDto(r.Id, r.AuthorId, r.RecipientId, r.Rating, r.Summary))
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return reviews;
     }

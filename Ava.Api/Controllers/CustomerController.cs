@@ -18,6 +18,19 @@ public class CustomerController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet("allcustomers")]
+    public async Task<IActionResult> GetAllTherapists()
+    {
+        var customers = await _mediator.Send(new GetAllCustomersQuery());
+
+        if (customers == null || !customers.Any())
+        {
+            return NotFound();
+        }
+
+        return Ok(customers);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCustomerProfile(Guid id)
     {
@@ -70,8 +83,8 @@ public class CustomerController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("{id}/review")]
-    public async Task<IActionResult> AddReviewToTherapist(Guid id, [FromBody] CreateReviewDto reviewDto)
+    [HttpPost("review/add")]
+    public async Task<IActionResult> AddReviewToTherapist([FromBody] CreateReviewDto reviewDto)
     {
         var validationResults = reviewDto.Validate().ToList();
         if (validationResults.Any())
@@ -85,7 +98,7 @@ public class CustomerController : ControllerBase
         return CreatedAtAction(nameof(GetCustomerProfile), new { id = reviewId }, reviewId);
     }
 
-    [HttpPut("reviews/update")]
+    [HttpPut("review/update")]
     public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDto updateReviewDto)
     {
         var validationResults = updateReviewDto.Validate().ToList();

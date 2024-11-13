@@ -22,7 +22,7 @@ public class TherapistController : ControllerBase
     [HttpGet("alltherapists")]
     public async Task<IActionResult> GetAllTherapists()
     {
-        var therapists = await _mediator.Send(new GetAllTherapistsQuery());
+        var therapists = await _mediator.Send(new GetAllCustomersQuery());
 
         if (therapists == null || !therapists.Any())
         {
@@ -81,16 +81,24 @@ public class TherapistController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("{id}/reviews/more")]
-    public async Task<IActionResult> GetMoreReviews(Guid id, int skip, int take)
+    [HttpGet("{id}/review/summary")]
+    public async Task<IActionResult> GetRatingSummary(Guid id, CancellationToken cancellationToken)
+    {
+        var ratingSummary = await _mediator.Send(new GetRatingSummaryQuery(id), cancellationToken);
+
+        return Ok(ratingSummary);
+    }
+
+    [HttpGet("{id}/review/all")]
+    public async Task<IActionResult> GetAllReviews(Guid id, int skip, int take)
     {
         var reviews = await _mediator.Send(new GetMoreReviewsForTherapistQuery(id, skip, take ));
 
         return Ok(reviews);
     }
 
-    [HttpPost("{id}/review")]
-    public async Task<IActionResult> AddReviewToTherapist(Guid id, [FromBody] CreateReviewDto reviewDto)
+    [HttpPost("review/add")]
+    public async Task<IActionResult> AddReviewToTherapist([FromBody] CreateReviewDto reviewDto)
     {
         var validationResults = reviewDto.Validate().ToList();
         if (validationResults.Any())
@@ -104,7 +112,7 @@ public class TherapistController : ControllerBase
         return CreatedAtAction(nameof(GetTherapistProfile), new { id = reviewId }, reviewId);
     }
 
-    [HttpPut("reviews/update")]
+    [HttpPut("review/update")]
     public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDto updateReviewDto)
     {
         var validationResults = updateReviewDto.Validate().ToList();
