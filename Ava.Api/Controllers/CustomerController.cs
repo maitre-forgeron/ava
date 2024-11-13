@@ -1,6 +1,7 @@
 ﻿using Ava.Application.Customers.Commands;
 using Ava.Application.Customers.Queries;
 using Ava.Application.Dtos;
+using Ava.Application.Reviews.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,5 +47,14 @@ public class CustomerController : ControllerBase
     {
         await _mediator.Send(new DeleteCustomerCommand(id));
         return NoContent();
+    }
+
+    [HttpPost("{id}/review")]
+    public async Task<IActionResult> AddReviewToTherapist(Guid id, [FromBody] CreateReviewDto reviewDto)
+    {
+        var command = new AddReviewCommand(reviewDto.AuthorId, reviewDto.RecipientId, reviewDto.Rating, reviewDto.Summary);
+        var reviewId = await _mediator.Send(command);
+
+        return CreatedAtAction(nameof(GetCustomerProfile), new { id = reviewId }, reviewId);
     }
 }

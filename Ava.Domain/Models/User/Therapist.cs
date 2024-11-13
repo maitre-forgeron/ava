@@ -27,4 +27,9 @@ public class Therapist : UserProfile
         Rating = rating;
         Summary = summary;
     }
+
+    public void UpdateRating(double newRating)
+    {
+        Rating = newRating;
+    }
 }

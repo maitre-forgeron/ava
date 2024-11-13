@@ -1,4 +1,6 @@
 ﻿using Ava.Application.Dtos;
+using Ava.Application.Reviews.Commands;
+using Ava.Application.Reviews.Queries;
 using Ava.Application.Therapists.Commands;
 using Ava.Application.Therapists.Queries;
 using MediatR;
@@ -85,5 +87,14 @@ public class TherapistController : ControllerBase
         var reviews = await _mediator.Send(new GetMoreReviewsForTherapistQuery(id, skip, take ));
 
         return Ok(reviews);
+    }
+
+    [HttpPost("{id}/review")]
+    public async Task<IActionResult> AddReviewToTherapist(Guid id, [FromBody] CreateReviewDto reviewDto)
+    {
+        var command = new AddReviewCommand(reviewDto.AuthorId, reviewDto.RecipientId, reviewDto.Rating, reviewDto.Summary);
+        var reviewId = await _mediator.Send(command);
+
+        return CreatedAtAction(nameof(GetTherapistProfile), new { id = reviewId }, reviewId);
     }
 }

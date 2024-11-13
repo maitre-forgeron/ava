@@ -3,7 +3,7 @@ using Ava.Infrastructure.Db;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ava.Application.Therapists.Queries;
+namespace Ava.Application.Reviews.Queries;
 
 public record GetMoreReviewsForTherapistQuery(Guid TherapistId, int Skip, int Take) : IRequest<List<ReviewDto>>;
 
