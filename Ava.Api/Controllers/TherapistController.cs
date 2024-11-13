@@ -92,6 +92,12 @@ public class TherapistController : ControllerBase
     [HttpPost("{id}/review")]
     public async Task<IActionResult> AddReviewToTherapist(Guid id, [FromBody] CreateReviewDto reviewDto)
     {
+        var validationResults = reviewDto.Validate().ToList();
+        if (validationResults.Any())
+        {
+            return BadRequest(validationResults);
+        }
+
         var command = new AddReviewCommand(reviewDto.AuthorId, reviewDto.RecipientId, reviewDto.Rating, reviewDto.Summary);
         var reviewId = await _mediator.Send(command);
 
@@ -101,6 +107,12 @@ public class TherapistController : ControllerBase
     [HttpPut("reviews/update")]
     public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDto updateReviewDto)
     {
+        var validationResults = updateReviewDto.Validate().ToList();
+        if (validationResults.Any())
+        {
+            return BadRequest(validationResults);
+        }
+
         var result = await _mediator.Send(new UpdateReviewCommand(
             updateReviewDto.AuthorId,
             updateReviewDto.RecipientId,
