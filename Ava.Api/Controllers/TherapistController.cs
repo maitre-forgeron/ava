@@ -97,4 +97,17 @@ public class TherapistController : ControllerBase
 
         return CreatedAtAction(nameof(GetTherapistProfile), new { id = reviewId }, reviewId);
     }
+
+    [HttpPut("reviews/update")]
+    public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDto updateReviewDto)
+    {
+        var result = await _mediator.Send(new UpdateReviewCommand(
+            updateReviewDto.AuthorId,
+            updateReviewDto.RecipientId,
+            updateReviewDto.NewRating,
+            updateReviewDto.NewSummary
+        ));
+
+        return Ok(result);
+    }
 }

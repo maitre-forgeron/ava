@@ -25,4 +25,10 @@ public class Review : Entity
         Rating = rating;
         Summary = summary;
     }
+
+    public void Update(int newRating, string newSummary)
+    {
+        Rating = newRating;
+        Summary = newSummary;
+    }
 }
