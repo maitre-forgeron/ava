@@ -20,7 +20,5 @@ export class TherapistsFilterComponent {
             rating: this.rating
             // more here
         });
-
-        console.log(this.rating);
     }
 }
