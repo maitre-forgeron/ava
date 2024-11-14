@@ -240,17 +240,24 @@ namespace Ava.Tests.Unit.Controllers
             // Arrange
             var invalidReviewDto = new CreateReviewDto(Guid.Empty, Guid.Empty, 0, "");
             var mediatorMock = new Mock<IMediator>();
-            mediatorMock.Setup(m => m.Send(It.IsAny<AddReviewCommand>(), default))
-                         .ReturnsAsync(Result.Success());
+
+            mediatorMock.Setup(m => m.Send(It.Is<AddReviewCommand>(cmd =>
+                    cmd.Rating == invalidReviewDto.Rating &&
+                    cmd.Summary == invalidReviewDto.Summary &&
+                    (cmd.Rating < 1 || cmd.Rating > 5 || string.IsNullOrWhiteSpace(cmd.Summary))),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Result.Failure(new Error("400", "Invalid rating or summary")));
+
             var controller = new CustomerController(mediatorMock.Object);
 
             // Act
             var result = await controller.AddReviewToTherapist(invalidReviewDto);
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var badRequestResult = Assert.IsType<BadRequestResult>(result);
             Assert.Equal(400, badRequestResult.StatusCode);
         }
+
 
         [Fact]
         public async Task ReturnOkWhenReviewUpdatedSuccessfully()
@@ -284,13 +291,8 @@ namespace Ava.Tests.Unit.Controllers
             var result = await controller.AddReviewToTherapist(invalidReviewDto);
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var badRequestResult = Assert.IsType<BadRequestResult>(result);
             Assert.Equal(400, badRequestResult.StatusCode);
-
-            var validationErrors = badRequestResult.Value as List<ValidationResult>;
-            Assert.NotNull(validationErrors);
-            Assert.Contains(validationErrors, v => v.MemberNames.Contains("Summary") && v.ErrorMessage.Contains("Summary is required for ratings 3 or lower."));
-
         }
 
         [Fact]
@@ -307,12 +309,8 @@ namespace Ava.Tests.Unit.Controllers
             var result = await controller.UpdateReview(invalidUpdateReviewDto);
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var badRequestResult = Assert.IsType<BadRequestResult>(result);
             Assert.Equal(400, badRequestResult.StatusCode);
-
-            var validationErrors = badRequestResult.Value as List<ValidationResult>;
-            Assert.NotNull(validationErrors);
-            Assert.Contains(validationErrors, v => v.MemberNames.Contains("NewSummary") && v.ErrorMessage.Contains("Summary is required for ratings 3 or lower."));
         }
 
         [Fact]
@@ -329,12 +327,69 @@ namespace Ava.Tests.Unit.Controllers
             var result = await controller.AddReviewToTherapist(invalidReviewDto);
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var badRequestResult = Assert.IsType<BadRequestResult>(result);
             Assert.Equal(400, badRequestResult.StatusCode);
+        }
 
-            var validationErrors = badRequestResult.Value as List<ValidationResult>;
-            Assert.NotNull(validationErrors);
-            Assert.Contains(validationErrors, v => v.MemberNames.Contains("Summary") && v.ErrorMessage.Contains("Summary is required for ratings 3 or lower."));
+        [Fact]
+        public async Task ReturnBadRequestWhenRatingIsAboveMaxLimit()
+        {
+            // Arrange
+            var invalidReviewDto = new CreateReviewDto(Guid.NewGuid(), Guid.NewGuid(), 6, "Valid summary");
+            var mediatorMock = new Mock<IMediator>();
+
+            mediatorMock.Setup(m => m.Send(It.Is<AddReviewCommand>(cmd => cmd.Rating > 5), It.IsAny<CancellationToken>()))
+                        .ReturnsAsync(Result.Failure(new Error("400", "Rating must be between 1 and 5.")));
+
+            var controller = new CustomerController(mediatorMock.Object);
+
+            // Act
+            var result = await controller.AddReviewToTherapist(invalidReviewDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestResult>(result);
+            Assert.Equal(400, badRequestResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task ReturnBadRequestWhenRatingIsThreeOrLowerWithEmptySummary()
+        {
+            // Arrange
+            var invalidReviewDto = new CreateReviewDto(Guid.NewGuid(), Guid.NewGuid(), 3, "");
+            var mediatorMock = new Mock<IMediator>();
+
+            mediatorMock.Setup(m => m.Send(It.Is<AddReviewCommand>(cmd => cmd.Rating <= 3 && string.IsNullOrWhiteSpace(cmd.Summary)), It.IsAny<CancellationToken>()))
+                        .ReturnsAsync(Result.Failure(new Error("400", "Summary is required for ratings 3 or lower.")));
+
+            var controller = new CustomerController(mediatorMock.Object);
+
+            // Act
+            var result = await controller.AddReviewToTherapist(invalidReviewDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestResult>(result);
+            Assert.Equal(400, badRequestResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task ReturnCreatedResultWhenReviewIsValid()
+        {
+            // Arrange
+            var validReviewDto = new CreateReviewDto(Guid.NewGuid(), Guid.NewGuid(), 4, "This is a valid review summary.");
+            var mediatorMock = new Mock<IMediator>();
+
+            var newReviewId = Guid.NewGuid();
+            mediatorMock.Setup(m => m.Send(It.IsAny<AddReviewCommand>(), It.IsAny<CancellationToken>()))
+                        .ReturnsAsync(Result.Success());
+
+            var controller = new CustomerController(mediatorMock.Object);
+
+            // Act
+            var result = await controller.AddReviewToTherapist(validReviewDto);
+
+            // Assert
+            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
+            Assert.Equal(201, createdAtActionResult.StatusCode);
         }
     }
 }

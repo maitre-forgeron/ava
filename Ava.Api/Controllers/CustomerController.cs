@@ -3,6 +3,7 @@ using Ava.Application.Customers.Queries;
 using Ava.Application.Dtos;
 using Ava.Application.Models;
 using Ava.Application.Reviews.Commands;
+using Ava.Domain.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -92,14 +93,13 @@ public class CustomerController : ControllerBase
     [HttpPost("review/add")]
     public async Task<IActionResult> AddReviewToTherapist([FromBody] CreateReviewDto reviewDto)
     {
-        var validationResults = reviewDto.Validate().ToList();
-        if (validationResults.Any())
-        {
-            return BadRequest(validationResults);
-        }
-
         var command = new AddReviewCommand(reviewDto.AuthorId, reviewDto.RecipientId, reviewDto.Rating, reviewDto.Summary);
         var reviewId = await _mediator.Send(command);
+
+        if (reviewId == null || reviewId.IsFailure)
+        {
+            return BadRequest();
+        }
 
         return CreatedAtAction(nameof(GetCustomerProfile), new { id = reviewId }, reviewId);
     }
@@ -107,18 +107,17 @@ public class CustomerController : ControllerBase
     [HttpPut("review/update")]
     public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDto updateReviewDto)
     {
-        var validationResults = updateReviewDto.Validate().ToList();
-        if (validationResults.Any())
-        {
-            return BadRequest(validationResults);
-        }
-
         var result = await _mediator.Send(new UpdateReviewCommand(
             updateReviewDto.AuthorId,
             updateReviewDto.RecipientId,
             updateReviewDto.NewRating,
             updateReviewDto.NewSummary
         ));
+
+        if (result == null || result.IsFailure)
+        {
+            return BadRequest();
+        }
 
         return Ok(result);
     }
