@@ -1,0 +1,38 @@
+@use "../../../../styles/spacings.scss" as spacing;
+
+.list-section {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: spacing.$spacing-xl;
+    scrollbar-width: thin;
+    padding-left: spacing.$spacing-xl;
+    padding-bottom: spacing.$spacing-2xl;
+
+    ul {
+        li {
+            list-style-type: none;
+
+            &:not(:last-of-type) {
+                margin-bottom: spacing.$spacing-2xl;
+            }
+        }
+    }
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}

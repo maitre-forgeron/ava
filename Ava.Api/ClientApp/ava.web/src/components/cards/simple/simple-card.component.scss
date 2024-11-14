@@ -1,0 +1,50 @@
+@use "../../../styles/colors.scss" as colors; 
+@use "../../../styles/spacings.scss" as spacings;
+
+.card {
+    text-align: center;
+    color: colors.$color-true-white;
+    border-radius: 15px;
+    padding: spacings.$spacing-2xl;
+    box-shadow: 0 4px 8px colors.$color-shadow-light, 0 6px 20px colors.$color-shadow-dark;
+}
+
+.card-header {
+    margin-bottom: spacings.$spacing-xl;
+}
+
+.card-1 {
+    background-color: colors.$color-steel-gray;
+}
+
+.card-2 {
+    background-color: colors.$color-light-pink;
+}
+
+.card-3 {
+    background-color: colors.$color-light-blue;
+}
+
+.card-4 {
+    background-color: colors.$color-rose-pink;
+}
+
+.card-5 {
+    background-color: colors.$color-mint-green;
+}
+
+.card-6 {
+    background-color: colors.$color-dark-gray;
+}
+
+.card-7 {
+    background-color: colors.$color-darker-gray;
+}
+
+.card-8 {
+    background-color: colors.$color-light-beige;
+}
+
+.card-9 {
+    background-color: colors.$color-dark-brown;
+}

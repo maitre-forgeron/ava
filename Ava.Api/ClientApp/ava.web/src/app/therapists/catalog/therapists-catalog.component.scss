@@ -1,0 +1,33 @@
+@use "../../../styles/colors.scss" as colors;
+@use "../../../styles/spacings.scss" as spacings;
+
+main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top,
+            colors.$color-brown,
+            colors.$color-muted-brown,
+            colors.$color-muted-gray,
+            colors.$color-muted-teal,
+            colors.$color-light-cyan,
+            colors.$color-cyan);
+}
+
+.grid {
+    display: grid;
+}
+
+.grid--2-cols {
+    grid-template-columns: 1fr 3fr;
+    margin-right: spacings.$spacing-2xl;
+    margin-left: spacings.$spacing-2xl;
+    column-gap: spacings.$spacing-2xl;
+}
+
+.catalog-section-container {
+    background-color: colors.$color-beige;
+    box-shadow: 14px 14px 20px 2px colors.$color-shadow-light;
+    padding: spacings.$spacing-3xl;
+    border-radius: 15px;
+}

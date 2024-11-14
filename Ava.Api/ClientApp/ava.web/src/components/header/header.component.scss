@@ -1,0 +1,34 @@
+@use "../../styles/colors.scss" as colors;
+@use "../../styles/spacings.scss" as spacings;
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: colors.$color-cyan;
+    height: spacings.$spacing-7xl;
+    padding: 0 spacings.$spacing-6xl;
+}
+
+.main-nav-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: spacings.$spacing-4xl;
+}
+
+.main-nav-link {
+    text-decoration: none;
+    color: colors.$color-white;
+}
+
+.logo {
+    height: 2.2rem;
+}
+
+@media (max-width: 992px) {
+    header {
+        flex-direction: column;
+        padding: spacings.$spacing-xl spacings.$spacing-3xl;
+    }
+}
