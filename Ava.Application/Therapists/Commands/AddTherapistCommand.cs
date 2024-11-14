@@ -1,13 +1,14 @@
 ﻿using Ava.Application.Dtos;
+using Ava.Application.Models;
 using Ava.Domain.Models.User;
 using Ava.Infrastructure.Db;
 using MediatR;
 
 namespace Ava.Application.Therapists.Commands;
 
-public record AddTherapistCommand(CreateTherapistDto Dto) : IRequest<Guid>;
+public record AddTherapistCommand(CreateTherapistDto Dto) : IRequest<Result>;
 
-public class AddTherapistCommandHandler : IRequestHandler<AddTherapistCommand, Guid>
+public class AddTherapistCommandHandler : IRequestHandler<AddTherapistCommand, Result>
 {
     private readonly AvaDbContext _context;
 
@@ -16,7 +17,7 @@ public class AddTherapistCommandHandler : IRequestHandler<AddTherapistCommand, G
         _context = context;
     }
 
-    public async Task<Guid> Handle(AddTherapistCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AddTherapistCommand request, CancellationToken cancellationToken)
     {
         //TODO certificate id
         var therapist = new Therapist(request.Dto.Id, request.Dto.FirstName, request.Dto.LastName, request.Dto.PersonalId, request.Dto.Rating, request.Dto.Summary, Guid.NewGuid());
@@ -24,6 +25,6 @@ public class AddTherapistCommandHandler : IRequestHandler<AddTherapistCommand, G
         _context.Add(therapist);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return therapist.Id;
+        return Result.Success();
     }
 }
