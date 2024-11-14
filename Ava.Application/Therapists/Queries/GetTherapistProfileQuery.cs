@@ -22,6 +22,8 @@ public class GetTherapistProfileQueryHandler : IRequestHandler<GetTherapistProfi
             .Where(t => t.Id == request.Id)
             .Select(t => new TherapistDto(
                 t.Id,
+                t.FirstName,
+                t.LastName,
                 t.Rating,
                 t.Summary,
                 t.CertificateId,

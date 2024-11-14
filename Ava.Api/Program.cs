@@ -1,5 +1,5 @@
-
 using Ava.api.Extensions;
+using Ava.Api.Extensions;
 using Ava.Application;
 using Ava.Infrastructure;
 using Ava.Infrastructure.Db;
@@ -16,12 +16,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         builder.Services.AddLoggingServices();
         builder.Host.UseSerilog(SerilogConfigurator.Configure);
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -29,13 +28,23 @@ public class Program
         builder.Services.AddApplicationServices();
 
         builder.AddAuthentication();
-       
+
         builder.Configuration.AddEnvironmentVariables()
             .AddUserSecrets(Assembly.GetAssembly(typeof(PictureService))!, true);
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalhost",
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+        });
+
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -52,6 +61,9 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+
+        // Use the CORS policy
+        app.UseCors("AllowLocalhost");
 
         app.MapControllers();
 

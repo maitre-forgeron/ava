@@ -1,25 +1,4 @@
 <section class="filter-section">
-    <ul>
-        <li>
-            <a>Filter 1</a>
-        </li>
-        <li>
-            <a>Filter 2</a>
-        </li>
-        <li>
-            <a>Filter 3</a>
-        </li>
-        <li>
-            <a>Filter 4</a>
-        </li>
-        <li>
-            <a>Filter 5</a>
-        </li>
-        <li>
-            <a>Filter 6</a>
-        </li>
-        <li>
-            <a>Filter 7</a>
-        </li>
-    </ul>
+    <label>Rating:</label>
+    <input type="number" [(ngModel)]="rating" (input)="onFilterChange()" placeholder="Minimum Rating" />
 </section>

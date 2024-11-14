@@ -23,6 +23,8 @@ public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuer
         var therapistDtos = _context.Therapists
             .Select(t => new TherapistDto(
                 t.Id,
+                t.FirstName,
+                t.LastName,
                 t.Rating,
                 t.Summary,
                 t.CertificateId,
