@@ -1,4 +1,5 @@
 ﻿using Ava.Application.Constants;
+using Ava.Application.Contracts;
 using Ava.Application.Models;
 using Ava.Infrastructure.Db;
 
@@ -13,9 +14,12 @@ public record RejectBookingCommand(Guid bookingId) : IRequest<Result>;
 public class RejectBookingCommandHandler : IRequestHandler<RejectBookingCommand, Result>
 {
     private readonly AvaDbContext _context;
-    public RejectBookingCommandHandler(AvaDbContext context)
+    private readonly IUserClaimService _claimService;
+
+    public RejectBookingCommandHandler(AvaDbContext context, IUserClaimService claimService)
     {
         _context = context;
+        _claimService = claimService;
     }
 
     public async Task<Result> Handle(RejectBookingCommand request, CancellationToken cancellationToken)
@@ -34,10 +38,7 @@ public class RejectBookingCommandHandler : IRequestHandler<RejectBookingCommand,
             return Result.Failure(TherapistErrors.NotFound);
         }
 
-        var hasTherapistRole = await _context.UserRoles
-            .Where(r => r.UserId == therapistEntity.Id)
-            .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r.Name)
-            .AnyAsync(name => name == "therapist", cancellationToken);
+        var hasTherapistRole = _claimService.HasRoleClaim(CustomerRoles.Therapist);
 
         if (!hasTherapistRole)
         {

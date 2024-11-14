@@ -1,6 +1,8 @@
 
 using Ava.api.Extensions;
+using Ava.Api.Services;
 using Ava.Application;
+using Ava.Application.Contracts;
 using Ava.Infrastructure;
 using Ava.Infrastructure.Db;
 using Ava.Infrastructure.Services.Pictures;
@@ -23,12 +25,14 @@ public class Program
         builder.Host.UseSerilog(SerilogConfigurator.Configure);
 
         builder.Services.AddControllers();
+        builder.Services.AddHttpContextAccessor();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddApplicationServices();
+        builder.Services.AddScoped<IUserClaimService, UserClaimService>();
 
         builder.AddAuthentication();
        
@@ -53,6 +57,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

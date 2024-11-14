@@ -3,10 +3,11 @@ using Ava.Application.Dtos;
 using Ava.Application.Models;
 using Ava.Domain.Models.Booking;
 using Ava.Infrastructure.Db;
+
 using Microsoft.EntityFrameworkCore;
+
 using Moq;
 using Moq.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace Ava.Tests.Unit.Queries;
 

@@ -4,10 +4,12 @@ using Ava.Application.Dtos;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ava.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookingController : ControllerBase
