@@ -1,6 +1,6 @@
 <div [class]="class">
     <div class="card-profile-image">
-        <img [src]="imageLink()">
+        <img [src]="imageLink()" [alt]="fullName()">
         <p class="card-header">{{ fullName() }} <br>{{ proffession() }}</p>
     </div>
     <div>
