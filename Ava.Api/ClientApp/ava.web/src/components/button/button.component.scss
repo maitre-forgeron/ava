@@ -1,0 +1,29 @@
+@use "../../styles/colors.scss" as colors; 
+@use "../../styles/font-size.scss" as fontSize;
+@use "../../styles/spacings.scss" as spacings;
+
+.btn-default {
+    display: inline-block;
+    font-size: fontSize.$font-size-16;
+    font-weight: 600;
+    padding: spacings.$spacing-lg spacings.$spacing-2xl;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    background-color: colors.$color-white;
+    color: colors.$color-dark-blue;
+
+    &:hover {
+        background-color: darken(colors.$color-white, 10%);
+    }
+}
+
+.btn-default-small {
+    font-size: fontSize.$font-size-16;
+    padding: spacings.$spacing-lg spacings.$spacing-2xl;
+}
+
+.btn-default-large {
+    font-size: fontSize.$font-size-30;
+    padding: spacings.$spacing-2xl spacings.$spacing-4xl;
+}

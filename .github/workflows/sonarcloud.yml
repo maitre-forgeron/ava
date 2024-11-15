@@ -26,4 +26,5 @@ jobs:
           args:
             -Dsonar.projectKey=${{ secrets.SONARCLOUD_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONARCLOUD_ORGANISATION }}
+            -Dsonar.exclusions=Ava.Api/ClientApp/ava.web/**
           projectBaseDir: .

@@ -1,0 +1,31 @@
+@use "../../../../styles/colors.scss" as colors;
+@use "../../../../styles/font-size.scss" as fontSize;
+@use "../../../../styles/spacings.scss" as spacing;
+
+.filter-section {
+    line-height: spacing.$spacing-5xl;
+    color: colors.$color-dark-teal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: fontSize.$font-size-16;
+    font-weight: 600;
+    border-right: 1px solid colors.$color-dark-blue;
+
+    ul {
+        flex-grow: 0.9;
+
+        li {
+            list-style-type: none;
+            border-bottom: 1px solid colors.$color-light-gray;
+            border-radius: 2px;
+            text-align: center;
+
+            &:hover {
+                background-color: colors.$color-muted-beige;
+                cursor: pointer;
+                color: colors.$color-dark-blue;
+            }
+        }
+    }
+}

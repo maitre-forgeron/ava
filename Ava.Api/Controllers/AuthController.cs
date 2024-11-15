@@ -16,7 +16,7 @@ public class AuthController : Controller
         _authService = authService;
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IResult> Login([FromBody] AuthDto model)
     {
         var loginResult = await _authService.Login(model);
@@ -24,7 +24,7 @@ public class AuthController : Controller
         return loginResult.ToResult();
     }
 
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<IResult> Register([FromBody] AuthDto model)
     {
         var registrationResult = await _authService.Register(model);
