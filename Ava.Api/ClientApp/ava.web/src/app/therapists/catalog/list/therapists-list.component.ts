@@ -21,6 +21,6 @@ export class TherapistsListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.therapists = this._therapistService.getAllTherapists();
+        //this.therapists = this._therapistService.getAllTherapists();
     }
 }
