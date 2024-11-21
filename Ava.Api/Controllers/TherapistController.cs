@@ -1,4 +1,7 @@
 ﻿using Ava.Application.Dtos;
+using Ava.Application.Models;
+using Ava.Application.Reviews.Commands;
+using Ava.Application.Reviews.Queries;
 using Ava.Application.Therapists.Commands;
 using Ava.Application.Therapists.Queries;
 using MediatR;
@@ -20,7 +23,7 @@ public class TherapistController : ControllerBase
     [HttpGet("alltherapists")]
     public async Task<IActionResult> GetAllTherapists()
     {
-        var therapists = await _mediator.Send(new GetAllTherapistsQuery());
+        var therapists = await _mediator.Send(new GetAllCustomersQuery());
 
         if (therapists == null || !therapists.Any())
         {
@@ -66,7 +69,12 @@ public class TherapistController : ControllerBase
             return BadRequest();
         }
 
-        await _mediator.Send(new UpdateTherapistCommand(therapistDto));
+        var result = await _mediator.Send(new UpdateTherapistCommand(therapistDto));
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
 
         return NoContent();
     }
@@ -79,11 +87,51 @@ public class TherapistController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("{id}/reviews/more")]
-    public async Task<IActionResult> GetMoreReviews(Guid id, int skip, int take)
+    [HttpGet("{id}/review/summary")]
+    public async Task<IActionResult> GetRatingSummary(Guid id, CancellationToken cancellationToken)
+    {
+        var ratingSummary = await _mediator.Send(new GetRatingSummaryQuery(id), cancellationToken);
+
+        return Ok(ratingSummary);
+    }
+
+    [HttpGet("{id}/review/all")]
+    public async Task<IActionResult> GetAllReviews(Guid id, int skip, int take)
     {
         var reviews = await _mediator.Send(new GetMoreReviewsForTherapistQuery(id, skip, take ));
 
         return Ok(reviews);
+    }
+
+    [HttpPost("review/add")]
+    public async Task<IActionResult> AddReviewToTherapist([FromBody] CreateReviewDto reviewDto)
+    {
+        var command = new AddReviewCommand(reviewDto.AuthorId, reviewDto.RecipientId, reviewDto.Rating, reviewDto.Summary);
+        var reviewId = await _mediator.Send(command);
+
+        if (reviewId == null || reviewId.IsFailure)
+        {
+            return BadRequest();
+        }
+
+        return CreatedAtAction(nameof(GetTherapistProfile), new { id = reviewId }, reviewId);
+    }
+
+    [HttpPut("review/update")]
+    public async Task<IActionResult> UpdateReview([FromBody] UpdateReviewDto updateReviewDto)
+    {
+        var result = await _mediator.Send(new UpdateReviewCommand(
+            updateReviewDto.AuthorId,
+            updateReviewDto.RecipientId,
+            updateReviewDto.NewRating,
+            updateReviewDto.NewSummary
+        ));
+
+        if (result == null || result.IsFailure)
+        {
+            return BadRequest();
+        }
+
+        return Ok(result);
     }
 }

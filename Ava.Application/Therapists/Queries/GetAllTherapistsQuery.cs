@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Therapists.Queries;
 
-public record GetAllTherapistsQuery : IRequest<IEnumerable<TherapistDto>>;
+public record GetAllCustomersQuery : IRequest<IEnumerable<TherapistDto>>;
 
-public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuery, IEnumerable<TherapistDto>>
+public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllCustomersQuery, IEnumerable<TherapistDto>>
 {
     private readonly AvaDbContext _context;
 
@@ -16,7 +16,7 @@ public class GetAllTherapistsQueryHandler : IRequestHandler<GetAllTherapistsQuer
         _context = context;
     }
 
-    public async Task<IEnumerable<TherapistDto>> Handle(GetAllTherapistsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<TherapistDto>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
     {
         //TODO paging needs to be done
 

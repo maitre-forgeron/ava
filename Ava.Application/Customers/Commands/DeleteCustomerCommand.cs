@@ -1,12 +1,13 @@
-﻿using Ava.Infrastructure.Db;
+﻿using Ava.Application.Models;
+using Ava.Infrastructure.Db;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ava.Application.Customers.Commands;
 
-public record DeleteCustomerCommand(Guid Id) : IRequest<Unit>;
+public record DeleteCustomerCommand(Guid Id) : IRequest<Result>;
 
-public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Unit>
+public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Result>
 {
     private readonly AvaDbContext _context;
 
@@ -15,10 +16,10 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
         _context = context;
     }
 
-    public async Task<Unit> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
     {
         var result = await _context.Customers.Where(c => c.Id == request.Id).ExecuteDeleteAsync(cancellationToken);
 
-        return Unit.Value;
+        return Result.Success();
     }
 }

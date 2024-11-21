@@ -1,4 +1,6 @@
-﻿namespace Ava.Domain.Models.User;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Ava.Domain.Models.User;
 
 public class Review : Entity
 {
@@ -22,7 +24,33 @@ public class Review : Entity
     {
         AuthorId = authorId;
         RecipientId = recipientId;
+        ValidateRating(rating, summary);
         Rating = rating;
         Summary = summary;
+    }
+
+    public void Update(int newRating, string newSummary)
+    {
+        ValidateRating(newRating, newSummary);
+        Rating = newRating;
+        Summary = newSummary;
+    }
+
+    private static void ValidateRating(int rating, string summary)
+    {
+        if (rating < 1 || rating > 5)
+        {
+            throw new ValidationException("Rating must be between 1 and 5.");
+        }
+
+        if (rating <= 3 && string.IsNullOrWhiteSpace(summary))
+        {
+            throw new ValidationException("Summary is required for ratings 3 or lower.");
+        }
+
+        if (summary?.Length > 500)
+        {
+            throw new ValidationException("Summary cannot exceed 500 characters.");
+        }
     }
 }
